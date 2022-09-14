@@ -1,39 +1,39 @@
-const { getGatsbyImageResolver } = require("gatsby-plugin-image/graphql-utils")
+const { getGatsbyImageResolver } = require("gatsby-plugin-image/graphql-utils");
 
 exports.createSchemaCustomization = async ({ actions }) => {
   actions.createFieldExtension({
     name: "wpImagePassthroughResolver",
     extend(options) {
-      const { args } = getGatsbyImageResolver()
+      const { args } = getGatsbyImageResolver();
       return {
         args,
         async resolve(source, args, context, info) {
-          const imageType = info.schema.getType("ImageSharp")
+          const imageType = info.schema.getType("ImageSharp");
           const file = context.nodeModel.getNodeById({
             id: source.localFile?.id,
-          })
-          if (!file) return null
+          });
+          if (!file) return null;
           const image = context.nodeModel.getNodeById({
             id: file.children[0],
-          })
-          const resolver = imageType.getFields().gatsbyImageData.resolve
-          if (!resolver) return null
-          return await resolver(image, args, context, info)
+          });
+          const resolver = imageType.getFields().gatsbyImageData.resolve;
+          if (!resolver) return null;
+          return await resolver(image, args, context, info);
         },
-      }
+      };
     },
-  })
+  });
 
   actions.createFieldExtension({
     name: "wpRecursiveImage",
     extend(options) {
       return {
         async resolve(source, args, context, info) {
-          return source
+          return source;
         },
-      }
+      };
     },
-  })
+  });
 
   // interfaces
   actions.createTypes(/* GraphQL */ `
@@ -50,7 +50,7 @@ exports.createSchemaCustomization = async ({ actions }) => {
       id: ID!
       blocktype: String
     }
-  `)
+  `);
 
   // blocks
   actions.createTypes(/* GraphQL */ `
@@ -223,7 +223,7 @@ exports.createSchemaCustomization = async ({ actions }) => {
       links: [HomepageLink] @link
       logos: [HomepageImage] @link
     }
-  `)
+  `);
 
   // pages
   actions.createTypes(/* GraphQL */ `
@@ -251,7 +251,7 @@ exports.createSchemaCustomization = async ({ actions }) => {
       image: HomepageImage @link
       html: String
     }
-  `)
+  `);
 
   // WordPress types
   actions.createTypes(/* GraphQL */ `
@@ -265,8 +265,17 @@ exports.createSchemaCustomization = async ({ actions }) => {
       url: String @proxy(from: "mediaItemUrl")
       mediaItemUrl: String
     }
-  `)
-}
+  `);
+
+  actions.createTypes(`
+    type HomepageBanner implements Node & HomepageBlock {
+      id: ID!
+      blocktype: String
+      heading: String
+      text: String
+    }
+  `);
+};
 
 exports.onCreateNode = ({
   node,
@@ -276,12 +285,11 @@ exports.onCreateNode = ({
   createContentDigest,
   reporter,
 }) => {
-  if (!node.internal.type.includes("Wp")) return
+  if (!node.internal.type.includes("Wp")) return;
 
-  const createLinkNode =
-    (parent) =>
+  const createLinkNode = (parent) =>
     ({ url, title, ...rest }, i) => {
-      const id = createNodeId(`${parent.id} >>> HomepageLink ${url} ${i}`)
+      const id = createNodeId(`${parent.id} >>> HomepageLink ${url} ${i}`);
       actions.createNode({
         id,
         internal: {
@@ -290,31 +298,32 @@ exports.onCreateNode = ({
         },
         href: url,
         text: title,
-      })
-      return id
-    }
+      });
+      return id;
+    };
 
-  const createItemNode = (parent, type) => (data, i) => {
-    const id = createNodeId(`${parent.id} >>> ${type} ${i}`)
-    if (data.image) {
-      data.image = data.image?.id
-    }
-    if (data.avatar) {
-      data.avatar = data.avatar?.id
-    }
-    if (Array.isArray(data.link)) {
-      data.links = data.link.filter(Boolean).map(createLinkNode(parent))
-    }
-    actions.createNode({
-      ...data,
-      id,
-      internal: {
-        type,
-        contentDigest: createContentDigest(data),
-      },
-    })
-    return id
-  }
+  const createItemNode = (parent, type) =>
+    (data, i) => {
+      const id = createNodeId(`${parent.id} >>> ${type} ${i}`);
+      if (data.image) {
+        data.image = data.image?.id;
+      }
+      if (data.avatar) {
+        data.avatar = data.avatar?.id;
+      }
+      if (Array.isArray(data.link)) {
+        data.links = data.link.filter(Boolean).map(createLinkNode(parent));
+      }
+      actions.createNode({
+        ...data,
+        id,
+        internal: {
+          type,
+          contentDigest: createContentDigest(data),
+        },
+      });
+      return id;
+    };
 
   if (node.internal.type === "WpPage") {
     switch (node.slug) {
@@ -330,7 +339,9 @@ exports.onCreateNode = ({
           statList,
           testimonialList,
           cta,
-        } = node.homepage
+        } = node.homepage;
+
+        const { homepageBanner } = node;
 
         const content = {
           features: [featureList.feature1, featureList.feature2]
@@ -365,7 +376,7 @@ exports.onCreateNode = ({
           ]
             .filter(Boolean)
             .map(createItemNode(node, "HomepageTestimonial")),
-        }
+        };
 
         const blocks = {
           hero: {
@@ -417,7 +428,9 @@ exports.onCreateNode = ({
               .filter(Boolean)
               .map(createLinkNode(node.id)),
           },
-        }
+        };
+
+        const bannerID = createNodeId(`${node.id} >>> HomepageBanner`);
 
         actions.createNode({
           ...blocks.hero,
@@ -426,7 +439,7 @@ exports.onCreateNode = ({
             type: "HomepageHero",
             contentDigest: node.internal.contentDigest,
           },
-        })
+        });
 
         actions.createNode({
           ...blocks.logoList,
@@ -435,7 +448,7 @@ exports.onCreateNode = ({
             type: "HomepageLogoList",
             contentDigest: node.internal.contentDigest,
           },
-        })
+        });
 
         actions.createNode({
           ...blocks.featureList,
@@ -444,7 +457,7 @@ exports.onCreateNode = ({
             type: "HomepageFeatureList",
             contentDigest: node.internal.contentDigest,
           },
-        })
+        });
 
         actions.createNode({
           ...blocks.productList,
@@ -453,7 +466,7 @@ exports.onCreateNode = ({
             type: "HomepageProductList",
             contentDigest: node.internal.contentDigest,
           },
-        })
+        });
 
         actions.createNode({
           ...blocks.benefitList,
@@ -462,7 +475,7 @@ exports.onCreateNode = ({
             type: "HomepageBenefitList",
             contentDigest: node.internal.contentDigest,
           },
-        })
+        });
 
         actions.createNode({
           ...blocks.statList,
@@ -471,7 +484,7 @@ exports.onCreateNode = ({
             type: "HomepageStatList",
             contentDigest: node.internal.contentDigest,
           },
-        })
+        });
 
         actions.createNode({
           ...blocks.testimonialList,
@@ -480,7 +493,7 @@ exports.onCreateNode = ({
             type: "HomepageTestimonialList",
             contentDigest: node.internal.contentDigest,
           },
-        })
+        });
 
         actions.createNode({
           ...blocks.cta,
@@ -489,7 +502,19 @@ exports.onCreateNode = ({
             type: "HomepageCta",
             contentDigest: node.internal.contentDigest,
           },
-        })
+        });
+
+        actions.createNode({
+          id: bannerID,
+          internal: {
+            type: "HomepageBanner",
+            contentDigest: createContentDigest(JSON.stringify(homepageBanner)),
+          },
+          parent: node.id,
+          blocktype: "HomepageBanner",
+          heading: homepageBanner.bannerHeading,
+          text: homepageBanner.bannerText,
+        });
 
         actions.createNode({
           ...node.homepage,
@@ -504,6 +529,7 @@ exports.onCreateNode = ({
           image: node.featuredImage?.node?.id,
           content: [
             blocks.hero.id,
+            bannerID,
             blocks.logoList.id,
             blocks.productList.id,
             blocks.featureList.id,
@@ -512,9 +538,9 @@ exports.onCreateNode = ({
             blocks.testimonialList.id,
             blocks.cta.id,
           ],
-        })
+        });
 
-        break
+        break;
       default:
         actions.createNode({
           ...node.page,
@@ -529,8 +555,8 @@ exports.onCreateNode = ({
           description: node.page?.description,
           image: node.featuredImage?.node?.id,
           html: node.content,
-        })
-        break
+        });
+        break;
     }
   }
-}
+};

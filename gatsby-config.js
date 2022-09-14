@@ -1,8 +1,8 @@
 // support for .env, .env.development, and .env.production
-require("dotenv").config()
+require("dotenv").config();
 require("dotenv").config({
   path: `.env.${process.env.NODE_ENV}`,
-})
+});
 
 module.exports = {
   siteMetadata: {
@@ -12,6 +12,21 @@ module.exports = {
     description: "A Gatsby Starter for building homepages with WordPress",
   },
   plugins: [
+    {
+      resolve: "@chakra-ui/gatsby-plugin",
+      options: {
+        /**
+         * @property {boolean} [resetCSS=true]
+         * if false, this plugin will not use `<CSSReset />
+         */
+        resetCSS: true,
+        /**
+         * @property {boolean} [isUsingColorMode=true]
+         * if false, this plugin will not use <ColorModeProvider />
+         */
+        isUsingColorMode: true,
+      },
+    },
     {
       resolve: "gatsby-source-wordpress",
       options: {
@@ -36,4 +51,4 @@ module.exports = {
       },
     },
   ],
-}
+};

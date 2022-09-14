@@ -1,24 +1,24 @@
-import * as React from "react"
+import * as React from "react";
 import {
-  Twitter,
-  Twitch,
-  Instagram,
   Facebook,
-  Youtube,
   GitHub,
-} from "react-feather"
+  Instagram,
+  Twitch,
+  Twitter,
+  Youtube,
+} from "react-feather";
 import {
+  Box,
   Container,
   Flex,
   FlexList,
-  Box,
-  Space,
-  NavLink,
-  Text,
   IconLink,
+  NavLink,
+  Space,
+  Text,
   VisuallyHidden,
-} from "./ui"
-import BrandLogo from "./brand-logo"
+} from "./ui";
+import BrandLogo from "./brand-logo";
 
 const socialMedia = {
   TWITTER: {
@@ -51,21 +51,21 @@ const socialMedia = {
     name: "Twitch",
     icon: <Twitch />,
   },
-}
+};
 
 const getSocialURL = ({ service, username }) => {
-  const domain = socialMedia[service]?.url
-  if (!domain) return false
-  return `${domain}/${username}`
-}
+  const domain = socialMedia[service]?.url;
+  if (!domain) return false;
+  return `${domain}/${username}`;
+};
 
 const getSocialIcon = ({ service }) => {
-  return socialMedia[service]?.icon
-}
+  return socialMedia[service]?.icon;
+};
 
 const getSocialName = ({ service }) => {
-  return socialMedia[service]?.name
-}
+  return socialMedia[service]?.name;
+};
 
 const data = {
   links: [
@@ -104,35 +104,41 @@ const data = {
   ],
   socialLinks: [
     {
+      id: 0,
       service: "TWITTER",
       username: "gatsbyjs",
     },
     {
+      id: 1,
       service: "INSTAGRAM",
       username: "gatsbyjs",
     },
     {
+      id: 2,
       service: "GITHUB",
       username: "gatsbyjs",
     },
     {
+      id: 3,
       service: "FACEBOOK",
       username: "gatsbyjs",
     },
     {
+      id: 4,
       service: "YOUTUBE",
       username: "gatsbyjs",
     },
     {
+      id: 5,
       service: "TWITCH",
       username: "gatsbyjs",
     },
   ],
   copyright: "© 2022 Gatsby Inc. All rights reserved",
-}
+};
 
 export default function Footer(props) {
-  const { links, meta, socialLinks, copyright } = data
+  const { links, meta, socialLinks, copyright } = data;
 
   return (
     <Box as="footer" paddingY={4}>
@@ -146,7 +152,7 @@ export default function Footer(props) {
           <FlexList>
             {socialLinks &&
               socialLinks.map((link) => {
-                const url = getSocialURL(link)
+                const url = getSocialURL(link);
                 return (
                   url && (
                     <li key={link.id}>
@@ -156,7 +162,7 @@ export default function Footer(props) {
                       </IconLink>
                     </li>
                   )
-                )
+                );
               })}
           </FlexList>
         </Flex>
@@ -186,5 +192,5 @@ export default function Footer(props) {
       </Container>
       <Space size={3} />
     </Box>
-  )
+  );
 }
