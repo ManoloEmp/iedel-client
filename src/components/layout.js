@@ -1,11 +1,11 @@
 import * as React from "react";
+import HeaderAlt from "./header_alt";
 import Header from "./header";
 import Footer from "./footer";
 import Head from "./head";
 import "../styles.css";
 
 const Layout = (props) => {
-  console.log("props en lay", props);
   return (
     <>
       <Head {...props} />

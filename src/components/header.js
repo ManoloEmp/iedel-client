@@ -1,6 +1,5 @@
 import * as React from "react";
-import { Menu, X } from "react-feather";
-import { graphql } from "gatsby";
+
 /*import {
   Button,
   Container,
@@ -26,7 +25,6 @@ import {
   Spacer,
   Stack,
   Text,
-  useBreakpointValue,
   useColorModeValue,
   useDisclosure,
 } from "@chakra-ui/react";
@@ -37,66 +35,20 @@ import {
   HamburgerIcon,
 } from "@chakra-ui/icons";
 
-import {
-  desktopHeaderNavWrapper,
-  mobileHeaderNavWrapper,
-  mobileNavLink,
-  mobileNavOverlay,
-  mobileNavSVGColorWrapper,
-} from "./header.css";
 import BrandLogo from "./brand-logo";
-
-const data = {
-  navItems: [
-    {
-      id: 0,
-      navItemType: "Link",
-      href: "#!",
-      text: "Products",
-    },
-    {
-      id: 1,
-      navItemType: "Link",
-      href: "#!",
-      text: "Pricing",
-    },
-    {
-      id: 2,
-      navItemType: "Link",
-      href: "#!",
-      text: "About",
-    },
-    {
-      id: 3,
-      navItemType: "Link",
-      href: "#!",
-      text: "Blog",
-    },
-  ],
-  cta: {
-    href: "#!",
-    text: "Sign Up",
-  },
-};
 
 export default function Header(props) {
   const { isOpen, onToggle } = useDisclosure();
 
-  const elements = props.nodes.filter((e) => {
-    return e.cssClasses.some((el) => el === "menu_level_1");
-  });
-
-  /*
-  const { navItems, cta } = data;
-  const [isOpen, setOpen] = React.useState(false);
+  //const { navItems, cta } = data;
+  const [elements, setElements] = React.useState(null);
 
   React.useEffect(() => {
-    if (isOpen) {
-      document.body.style.overflowY = "hidden";
-    } else {
-      document.body.style.overflowY = "visible";
-    }
-  }, [isOpen]);*/
+    const payload = props.nodes.filter((e) => {
+      return e.cssClasses.some((el) => el === "menu_level_1");
+    });
+    setElements(payload);
+  }, [props]);
 
   return (
     <Box>
@@ -162,7 +114,7 @@ export default function Header(props) {
               bg: "brand.verde-medium",
             }}
           >
-            {elements[elements.length - 1].label.toUpperCase()}
+            {elements && elements[elements.length - 1].label.toUpperCase()}
           </Button>
         </Stack>
       </Flex>
@@ -181,7 +133,7 @@ const DesktopNav = ({ itens }) => {
 
   return (
     <Stack direction={"row"} spacing={4}>
-      {itens.map((navItem) => (
+      {itens && itens.map((navItem) => (
         <Box key={navItem.label}>
           <Popover trigger={"hover"} placement={"bottom-start"}>
             <PopoverTrigger>
@@ -225,8 +177,6 @@ const DesktopNav = ({ itens }) => {
 };
 
 const DesktopSubNav = ({ label, href, subLabel, childItems }) => {
-  const linkColor = useColorModeValue("gray.600", "gray.200");
-  const linkHoverColor = useColorModeValue("gray.800", "white");
   const popoverContentBgColor = useColorModeValue("white", "gray.800");
 
   return (
