@@ -1,60 +1,115 @@
 import { graphql } from "gatsby";
 
 import * as React from "react";
-import { Button, Flex, Heading, Stack, Text } from "@chakra-ui/react";
+import {
+  Box,
+  Button,
+  Flex,
+  Heading,
+  HStack,
+  Stack,
+  Text,
+} from "@chakra-ui/react";
+import { Container } from "./ui";
+import { desktopHeaderNavWrapper } from "./header.css";
+import Slide from "./slide";
 
 export default function Hero(props) {
+  const arrowStyles = {
+    cursor: "pointer",
+    pos: "absolute",
+    top: "50%",
+    w: "auto",
+    mt: "-22px",
+    p: "16px",
+    color: "white",
+    fontWeight: "bold",
+    fontSize: "18px",
+    transition: "0.6s ease",
+    borderRadius: "0 3px 3px 0",
+    userSelect: "none",
+    _hover: {
+      opacity: 0.8,
+      bg: "black",
+    },
+  };
+
+  const [currentSlide, setCurrentSlide] = React.useState(0);
+  const slidesCount = props.content.length;
+
+  const prevSlide = () => {
+    setCurrentSlide((s) => (s === 0 ? slidesCount - 1 : s - 1));
+  };
+
+  const nextSlide = () => {
+    setCurrentSlide((s) => (s === slidesCount - 1 ? 0 : s + 1));
+  };
+
+  const setSlide = (slide) => {
+    setCurrentSlide(slide);
+  };
+
+  const carouselStyle = {
+    transition: "all .5s",
+    ml: `-${currentSlide * 100}%`,
+  };
+
+  console.log("hero", props);
+
   return (
     <Flex
-      mx="auto"
-      w={"full"}
-      backgroundImage={props.image && props.image.url}
-      backgroundSize={"cover"}
-      backgroundPosition={"center center"}
-      align={"center"}
-      spacing={{ base: 8, md: 10 }}
-      direction={{ base: "column", md: "row" }}
+      w="full"
+      bg="#edf3f8"
+      _dark={{
+        bg: "#3e3e3e",
+      }}
+      p={0}
+      alignItems="center"
+      justifyContent="center"
     >
-      <Stack
-        px={24}
-        py={32}
-        bgGradient={"linear(to-r, blackAlpha.700, transparent)"}
-        maxW={"4xl"}
-        align={"flex-start"}
-        spacing={{ base: 5, md: 10 }}
-        w={"full"}
-      >
-        <Heading
-          lineHeight={1.1}
-          fontWeight={600}
-          fontSize={{ base: "3xl", sm: "4xl", lg: "6xl" }}
-          fontFamily={"heading"}
-          letterSpacing={"3px"}
+      <Flex w="full" overflow="hidden" pos="relative">
+        <Flex
+          mx="auto"
+          w={"full"}
+          align={"center"}
+          spacing={{ base: 8, md: 10 }}
+          direction={{ base: "column", md: "row" }}
+          {...carouselStyle}
         >
-          <Text as={"span"} color={"white"}>
-            {props.h1}
-          </Text>
-        </Heading>
-        <Text color={"white"} fontSize={{ base: "lg", sm: "2lg", lg: "3lg" }}>
-          {props.text}
+          {props.content.map((slide, id) => (
+            <Slide
+              key={slide.id}
+              {...slide}
+            />
+          ))}
+        </Flex>
+        <Text {...arrowStyles} left="0" onClick={prevSlide}>
+          &#10094;
         </Text>
-        <Stack
-          spacing={{ base: 4, sm: 6 }}
-          direction={{ base: "column", sm: "row" }}
-        >
-          <Button
-            rounded={"full"}
-            size={"lg"}
-            fontWeight={"normal"}
-            px={6}
-            colorScheme={"red"}
-            bg={"brand.green-core"}
-            _hover={{ bg: "red.500" }}
-          >
-            VER NOTAS
-          </Button>
-        </Stack>
-      </Stack>
+        <Text {...arrowStyles} right="0" onClick={nextSlide}>
+          &#10095;
+        </Text>
+        <HStack justify="center" pos="absolute" bottom="8px" w="full">
+          {Array.from({
+            length: slidesCount,
+          }).map((_, slide) => (
+            <Box
+              key={`dots-${slide}`}
+              cursor="pointer"
+              boxSize={["7px", null, "15px"]}
+              m="0 2px"
+              bg={currentSlide === slide ? "blackAlpha.800" : "blackAlpha.500"}
+              rounded="50%"
+              display="inline-block"
+              transition="background-color 0.6s ease"
+              _hover={{
+                bg: "blackAlpha.800",
+              }}
+              onClick={() => setSlide(slide)}
+            />
+          ))}
+        </HStack>
+      </Flex>
     </Flex>
   );
 }
@@ -62,20 +117,9 @@ export default function Hero(props) {
 export const query = graphql`
   fragment HomepageHeroContent on HomepageHero {
     id
-    kicker
-    h1: heading
-    subhead
-    text
-    links {
+    content {
       id
-      href
-      text
-    }
-    image {
-      id
-      gatsbyImageData
-      alt
-      url
+      ...HomepageSlideContent
     }
   }
 `;

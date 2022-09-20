@@ -5,12 +5,15 @@ import * as sections from "../components/sections";
 import Fallback from "../components/fallback";
 
 export default function Homepage(props) {
-  const { homepage, allWpMenu } = props.data;
+  const { homepage, allWpMenu, institucional } = props.data;
 
   console.log("data en page", allWpMenu.edges[0].node.menuItems);
 
   return (
-    <Layout {...allWpMenu.edges[0].node.menuItems} {...homepage}>
+    <Layout
+      {...allWpMenu.edges[0].node.menuItems}
+      {...homepage}
+    >
       {homepage.blocks.map((block) => {
         const { id, blocktype, ...componentProps } = block;
         const Component = sections[blocktype] || Fallback;
@@ -34,16 +37,15 @@ export const query = graphql`
         id
         blocktype
         ...HomepageHeroContent
-        ...HomepageFeatureListContent
-        ...HomepageCtaContent
-        ...HomepageLogoListContent
-        ...HomepageTestimonialListContent
-        ...HomepageBenefitListContent
-        ...HomepageStatListContent
-        ...HomepageProductListContent
-        ...HomepageBannerContent
+        ...HomepageBannerInstitucionalContent
+        ...HomepageBannerValoresContent
+    
+
       }
     }
+
+
+
     allWpMenu {
     edges {
       node {
@@ -81,3 +83,17 @@ export const query = graphql`
   }
   }
 `;
+
+/*
+
+institucional {
+  id
+  blocks: content {
+    id
+    blocktype
+    ...InstitucionalBannerContent
+
+  }
+}
+
+*/

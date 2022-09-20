@@ -14,10 +14,10 @@ export default function Banner(props) {
   );
 }
 
-export const query = graphql`
+/* export const query = graphql`
   fragment HomepageBannerContent on HomepageBanner {
     id
     heading
     text
   }
-`;
+`; */

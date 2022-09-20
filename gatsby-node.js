@@ -60,169 +60,55 @@ exports.createSchemaCustomization = async ({ actions }) => {
       text: String
     }
 
+    type HomepageSlide implements Node & HomepageBlock {
+      id: ID!
+      blocktype: String
+      heading: String
+      kicker: String
+      text: String
+      image: HomepageImage @link
+      links: [HomepageLink] @link
+    }
+
     type HomepageHero implements Node & HomepageBlock {
       id: ID!
       blocktype: String
-      heading: String!
-      kicker: String
-      subhead: String
-      image: HomepageImage @link
-      text: String
-      links: [HomepageLink] @link
+      content: [HomepageSlide] @link
     }
 
-    type HomepageCta implements Node & HomepageBlock {
+    type HomepageBannerInstitucional implements Node & HomepageBlock {
       id: ID!
       blocktype: String
       kicker: String
       heading: String
       text: String
+      feature_1: String
+      feature_2: String
+      feature_3: String
       links: [HomepageLink] @link
       image: HomepageImage @link
     }
 
-    type HomepageFeature implements Node & HomepageBlock {
+    type HomepageValue implements Node & HomepageBlock {
       id: ID!
       blocktype: String
       heading: String
       kicker: String
-      text: String
-      image: HomepageImage @link
-      links: [HomepageLink] @link
-    }
-
-    type HomepageTestimonial implements Node {
-      id: ID!
-      quote: String
-      source: String
-      avatar: HomepageImage @link
-    }
-
-    type HomepageBenefit implements Node {
-      id: ID!
-      heading: String
-      text: String
-      image: HomepageImage @link
-    }
-
-    type HomepageLogo implements Node {
-      id: ID!
-      image: HomepageImage @link
-      alt: String @proxy(from: "image.title")
-    }
-
-    type HomepageProduct implements Node {
-      id: ID!
-      heading: String
       text: String
       image: HomepageImage @link
       links: [HomepageLink] @link
     }
 
-    type HomepageFeatureList implements Node & HomepageBlock {
+    type HomepageBannerValores implements Node & HomepageBlock {
       id: ID!
       blocktype: String
+      heading: String
       kicker: String
-      heading: String
       text: String
-      content: [HomepageFeature] @link
+      content: [HomepageValue] @link
     }
 
-    type HomepageLogoList implements Node & HomepageBlock {
-      id: ID!
-      blocktype: String
-      text: String
-      logos: [HomepageImage] @link
-    }
-
-    type HomepageTestimonialList implements Node & HomepageBlock {
-      id: ID!
-      blocktype: String
-      kicker: String
-      heading: String
-      content: [HomepageTestimonial] @link
-    }
-
-    type HomepageBenefitList implements Node & HomepageBlock {
-      id: ID!
-      blocktype: String
-      heading: String
-      text: String
-      content: [HomepageBenefit] @link
-    }
-
-    type HomepageStat implements Node {
-      id: ID!
-      value: String
-      label: String
-      heading: String
-    }
-
-    type HomepageStatList implements Node & HomepageBlock {
-      id: ID!
-      blocktype: String
-      kicker: String
-      heading: String
-      text: String
-      image: HomepageImage @link
-      icon: HomepageImage @link
-      content: [HomepageStat] @link
-      links: [HomepageLink] @link
-    }
-
-    type HomepageProductList implements Node & HomepageBlock {
-      id: ID!
-      blocktype: String
-      kicker: String
-      heading: String
-      text: String
-      content: [HomepageProduct] @link
-    }
-
-    type AboutHero implements Node & HomepageBlock {
-      id: ID!
-      blocktype: String
-      heading: String
-      text: String
-      image: HomepageImage @link
-    }
-
-    type AboutStat implements Node & HomepageBlock {
-      id: ID!
-      blocktype: String
-      value: String
-      label: String
-    }
-
-    type AboutStatList implements Node & HomepageBlock {
-      id: ID!
-      blocktype: String
-      content: [AboutStat] @link
-    }
-
-    type AboutProfile implements Node {
-      id: ID!
-      image: HomepageImage @link
-      name: String
-      jobTitle: String
-    }
-
-    type AboutLeadership implements Node & HomepageBlock {
-      id: ID!
-      blocktype: String
-      kicker: String
-      heading: String
-      subhead: String
-      content: [AboutProfile] @link
-    }
-
-    type AboutLogoList implements Node & HomepageBlock {
-      id: ID!
-      blocktype: String
-      heading: String
-      links: [HomepageLink] @link
-      logos: [HomepageImage] @link
-    }
+    
   `);
 
   // pages
@@ -264,15 +150,6 @@ exports.createSchemaCustomization = async ({ actions }) => {
       localFile: File
       url: String @proxy(from: "mediaItemUrl")
       mediaItemUrl: String
-    }
-  `);
-
-  actions.createTypes(`
-    type HomepageBanner implements Node & HomepageBlock {
-      id: ID!
-      blocktype: String
-      heading: String
-      text: String
     }
   `);
 };
@@ -332,105 +209,57 @@ exports.onCreateNode = ({
         const {
           description,
           hero,
-          logoList,
-          featureList,
-          productList,
-          benefitList,
-          statList,
-          testimonialList,
-          cta,
-        } = node.homepage;
+          bannerInstitucional,
+          bannerValores,
+        } = node.inicio;
 
-        const { homepageBanner } = node;
+        console.log("data", node);
 
         const content = {
-          features: [featureList.feature1, featureList.feature2]
+          slides: [hero.slide1, hero.slide2, hero.slide3]
             .filter(Boolean)
-            .map((feature) => ({
-              ...feature,
-              blocktype: "Feature",
+            .map((slide) => ({
+              ...slide,
+              blocktype: "Slide",
             }))
-            .map(createItemNode(node, "HomepageFeature")),
-          products: [
-            productList.product1,
-            productList.product2,
-            productList.product3,
+            .map(createItemNode(node, "HomepageSlide")),
+          values: [
+            bannerValores.value1,
+            bannerValores.value2,
+            bannerValores.value3,
+            bannerValores.value4,
+            bannerValores.value5,
+            bannerValores.value6,
+            bannerValores.value7,
           ]
             .filter(Boolean)
-            .map(createItemNode(node, "HomepageProduct")),
-          benefits: [
-            benefitList.benefit1,
-            benefitList.benefit2,
-            benefitList.benefit3,
-          ]
-            .filter(Boolean)
-            .map(createItemNode(node, "HomepageBenefit")),
-          stats: [statList.stat1, statList.stat2, statList.stat3]
-            .filter(Boolean)
-            .map(createItemNode(node, "HomepageStat")),
-          testimonials: [
-            testimonialList.testimonial1,
-            testimonialList.testimonial2,
-            testimonialList.testimonial3,
-            testimonialList.testimonial4,
-          ]
-            .filter(Boolean)
-            .map(createItemNode(node, "HomepageTestimonial")),
+            .map((value) => ({
+              ...value,
+              blocktype: "Value",
+            }))
+            .map(createItemNode(node, "HomepageValue")),
         };
 
         const blocks = {
           hero: {
             id: createNodeId(`${node.id} >>> HomepageHero`),
             ...hero,
-            image: hero.image?.id,
-            links: [hero.cta1, hero.cta2]
+            content: content.slides,
+          },
+          bannerInstitucional: {
+            id: createNodeId(`${node.id} >>> HomepageBannerInstitucional`),
+            ...bannerInstitucional,
+            image: bannerInstitucional.image?.id,
+            links: [bannerInstitucional.cta]
               .filter(Boolean)
               .map(createLinkNode(node.id)),
           },
-          logoList: {
-            id: createNodeId(`${node.id} >>> HomepageLogoList`),
-            ...logoList,
-            logos: logoList.logos?.filter(Boolean).map((logo) => logo.id) || [],
-          },
-          featureList: {
-            id: createNodeId(`${node.id} >>> HomepageFeatureList`),
-            ...featureList,
-            content: content.features,
-          },
-          productList: {
-            id: createNodeId(`${node.id} >>> HomepageProductList`),
-            ...productList,
-            content: content.products,
-          },
-          benefitList: {
-            id: createNodeId(`${node.id} >>> HomepageBenefitList`),
-            ...benefitList,
-            content: content.benefits,
-          },
-          statList: {
-            id: createNodeId(`${node.id} >>> HomepageStatList`),
-            ...statList,
-            image: statList.image?.id,
-            icon: statList.icon?.id,
-            links: [statList.link].filter(Boolean).map(createLinkNode(node.id)),
-            content: content.stats,
-          },
-          testimonialList: {
-            id: createNodeId(`${node.id} >>> HomepageTestimonialList`),
-            ...testimonialList,
-            content: content.testimonials,
-          },
-          cta: {
-            id: createNodeId(`${node.id} >>> HompageCta`),
-            ...cta,
-            image: cta.image?.id,
-            links: [cta.link1, cta.link2]
-              .filter(Boolean)
-              .map(createLinkNode(node.id)),
+          bannerValores: {
+            id: createNodeId(`${node.id} >>> HomepageBannerValores`),
+            ...bannerValores,
+            content: content.values,
           },
         };
-
-        const bannerID = createNodeId(`${node.id} >>> HomepageBanner`);
 
         actions.createNode({
           ...blocks.hero,
@@ -442,78 +271,21 @@ exports.onCreateNode = ({
         });
 
         actions.createNode({
-          ...blocks.logoList,
-          blocktype: "HomepageLogoList",
+          ...blocks.bannerInstitucional,
+          blocktype: "HomepageBannerInstitucional",
           internal: {
-            type: "HomepageLogoList",
+            type: "HomepageBannerInstitucional",
             contentDigest: node.internal.contentDigest,
           },
         });
 
         actions.createNode({
-          ...blocks.featureList,
-          blocktype: "HomepageFeatureList",
+          ...blocks.bannerValores,
+          blocktype: "HomepageBannerValores",
           internal: {
-            type: "HomepageFeatureList",
+            type: "HomepageBannerValores",
             contentDigest: node.internal.contentDigest,
           },
-        });
-
-        actions.createNode({
-          ...blocks.productList,
-          blocktype: "HomepageProductList",
-          internal: {
-            type: "HomepageProductList",
-            contentDigest: node.internal.contentDigest,
-          },
-        });
-
-        actions.createNode({
-          ...blocks.benefitList,
-          blocktype: "HomepageBenefitList",
-          internal: {
-            type: "HomepageBenefitList",
-            contentDigest: node.internal.contentDigest,
-          },
-        });
-
-        actions.createNode({
-          ...blocks.statList,
-          blocktype: "HomepageStatList",
-          internal: {
-            type: "HomepageStatList",
-            contentDigest: node.internal.contentDigest,
-          },
-        });
-
-        actions.createNode({
-          ...blocks.testimonialList,
-          blocktype: "HomepageTestimonialList",
-          internal: {
-            type: "HomepageTestimonialList",
-            contentDigest: node.internal.contentDigest,
-          },
-        });
-
-        actions.createNode({
-          ...blocks.cta,
-          blocktype: "HomepageCta",
-          internal: {
-            type: "HomepageCta",
-            contentDigest: node.internal.contentDigest,
-          },
-        });
-
-        actions.createNode({
-          id: bannerID,
-          internal: {
-            type: "HomepageBanner",
-            contentDigest: createContentDigest(JSON.stringify(homepageBanner)),
-          },
-          parent: node.id,
-          blocktype: "HomepageBanner",
-          heading: homepageBanner.bannerHeading,
-          text: homepageBanner.bannerText,
         });
 
         actions.createNode({
@@ -529,14 +301,8 @@ exports.onCreateNode = ({
           image: node.featuredImage?.node?.id,
           content: [
             blocks.hero.id,
-            bannerID,
-            blocks.logoList.id,
-            blocks.productList.id,
-            blocks.featureList.id,
-            blocks.benefitList.id,
-            blocks.statList.id,
-            blocks.testimonialList.id,
-            blocks.cta.id,
+            blocks.bannerInstitucional.id,
+            blocks.bannerValores.id,
           ],
         });
 
