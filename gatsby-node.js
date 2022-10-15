@@ -68,6 +68,8 @@ exports.createSchemaCustomization = async ({ actions }) => {
       text: String
       image: HomepageImage @link
       links: [HomepageLink] @link
+      ctatext_1: String
+      ctatext_2: String 
     }
 
     type HomepageHero implements Node & HomepageBlock {
@@ -108,7 +110,7 @@ exports.createSchemaCustomization = async ({ actions }) => {
       content: [HomepageValue] @link
     }
 
-    
+
   `);
 
   // pages
@@ -150,6 +152,29 @@ exports.createSchemaCustomization = async ({ actions }) => {
       localFile: File
       url: String @proxy(from: "mediaItemUrl")
       mediaItemUrl: String
+    }
+  `);
+
+  actions.createTypes(`
+    type MenuLevel2 implements Node & HomepageBlock {
+      id: ID!
+      blocktype: String
+      tag: String
+      links: [HomepageLink] @link
+    }
+    
+    type MenuLevel1 implements Node & HomepageBlock {
+      id: ID!
+      blocktype: String
+      tag: String
+      links: [HomepageLink] @link
+      childs: [MenuLevel2] @link
+    }
+    
+    type MenuPrincipal implements Node & HomepageBlock {
+      id: ID!
+      blocktype: String
+      content: [MenuLevel1] @link
     }
   `);
 };
@@ -211,11 +236,42 @@ exports.onCreateNode = ({
           hero,
           bannerInstitucional,
           bannerValores,
-        } = node.inicio;
+        } = node.homepage;
 
-        console.log("data", node);
+        const { menuPrincipal } = node;
+
+        console.log("data node", node);
 
         const content = {
+          menus: [menuPrincipal.inicio, menuPrincipal.nuestraInstitucion]
+            .filter(Boolean)
+            .map((menu) => {
+              const data = JSON.stringify(menu);
+              console.log("la data", data);
+              return ({
+                ...menu,
+                blocktype: "Menu",
+                links: [menu.target]
+                  .filter(Boolean)
+                  .map(createLinkNode(node.id)),
+                childs: [menu.childs?.quienesSomos]
+                  .filter(Boolean)
+                  .map((child) => ({
+                    ...child,
+                    internal: {
+                      type: "Menu",
+                      contentDigest: createContentDigest(JSON.stringify(child)), //createContentDigest(JSON.stringify(menuPrincipal)),
+                    },
+                    parent: menu.id,
+                    blocktype: "Menu",
+                    links: [child.target]
+                      .filter(Boolean)
+                      .map(createLinkNode(node.id)),
+                  }))
+                  .map(createItemNode(node, "MenuLevel2")),
+              });
+            })
+            .map(createItemNode(node, "MenuLevel1")),
           slides: [hero.slide1, hero.slide2, hero.slide3]
             .filter(Boolean)
             .map((slide) => ({
@@ -240,6 +296,8 @@ exports.onCreateNode = ({
             .map(createItemNode(node, "HomepageValue")),
         };
 
+        console.log("content", JSON.stringify(content));
+
         const blocks = {
           hero: {
             id: createNodeId(`${node.id} >>> HomepageHero`),
@@ -259,7 +317,27 @@ exports.onCreateNode = ({
             ...bannerValores,
             content: content.values,
           },
+          menuPrincipal: {
+            ...menuPrincipal,
+            content: content.menus,
+          },
         };
+
+        const menuID = createNodeId(`${node.id} >>> MenuPrincipal`);
+
+        actions.createNode({
+          ...blocks.menuPrincipal,
+          id: menuID,
+          internal: {
+            type: "MenuPrincipal",
+            contentDigest: node.internal.contentDigest, //createContentDigest(JSON.stringify(menuPrincipal)),
+          },
+          parent: node.id,
+          blocktype: "MenuPrincipal",
+          /*links: [menuPrincipal.inicio, menuPrincipal.nuestra_institucion]
+            .filter(Boolean)
+            .map(createLinkNode(node.id)),*/
+        });
 
         actions.createNode({
           ...blocks.hero,
@@ -300,6 +378,7 @@ exports.onCreateNode = ({
           description,
           image: node.featuredImage?.node?.id,
           content: [
+            menuID,
             blocks.hero.id,
             blocks.bannerInstitucional.id,
             blocks.bannerValores.id,

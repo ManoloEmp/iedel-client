@@ -1,11 +1,53 @@
 import { graphql } from "gatsby";
 
 import * as React from "react";
-import { Box, Button, Flex, Heading, Stack, Text } from "@chakra-ui/react";
+import {
+  Box,
+  Button,
+  Flex,
+  Heading,
+  Lorem,
+  Modal,
+  ModalBody,
+  ModalCloseButton,
+  ModalContent,
+  ModalFooter,
+  ModalHeader,
+  ModalOverlay,
+  Stack,
+  Text,
+  useDisclosure,
+} from "@chakra-ui/react";
+
 import { Container } from "./ui";
 import { desktopHeaderNavWrapper } from "./header.css";
 
-export default function Hero(props) {
+/* function BannerRecursos(props) {
+  console.log("op", props);
+  return (
+    <>
+      <Modal isOpen={props.isOpen} onClose={props.onClose}>
+        <ModalOverlay />
+        <ModalContent>
+          <ModalHeader>Modal Title</ModalHeader>
+          <ModalCloseButton />
+          <ModalBody>
+            <Lorem count={2} />
+          </ModalBody>
+
+          <ModalFooter>
+            <Button colorScheme="blue" mr={3} onClick={props.onClose}>
+              Close
+            </Button>
+            <Button variant="ghost">Secondary Action</Button>
+          </ModalFooter>
+        </ModalContent>
+      </Modal>
+    </>
+  );
+} */
+
+export default function Slide(props) {
   console.log("slide", props);
   return (
     <Box
@@ -51,8 +93,9 @@ export default function Hero(props) {
             colorScheme={"red"}
             bg={"brand.green-core"}
             _hover={{ bg: "red.500" }}
+            onClick={props.onOpen}
           >
-            VER NOTAS
+            {props.ctatext1}
           </Button>
         </Stack>
       </Stack>
@@ -66,6 +109,7 @@ export const query = graphql`
     kicker
     heading
     text
+    ctatext1
     links {
       id
       href

@@ -1,5 +1,6 @@
 import * as React from "react";
 import { Container } from "./ui";
+import { graphql } from "gatsby";
 import { desktopHeaderNavWrapper } from "./header.css";
 import {
   Box,
@@ -28,14 +29,17 @@ import {
 import BrandLogo from "./brand-logo";
 
 export default function Header(props) {
+  console.log("menuuu", props);
   const { isOpen, onToggle } = useDisclosure();
 
   //const { navItems, cta } = data;
   const [elements, setElements] = React.useState(null);
 
   React.useEffect(() => {
-    const payload = props.nodes.filter((e) => {
-      return e.cssClasses.some((el) => el === "menu_level_1");
+    const payload = props.blocks.find((node) =>
+      node.blocktype === "MenuPrincipal"
+    ).content.filter((e) => {
+      return e.tag === "menu_level_1";
     });
     setElements(payload);
   }, [props]);
@@ -105,7 +109,8 @@ export default function Header(props) {
                 bg: "brand.verde-medium",
               }}
             >
-              {elements && elements[elements.length - 1].label.toUpperCase()}
+              {elements &&
+                elements[elements.length - 1].fieldGroupName.toUpperCase()}
             </Button>
           </Stack>
         </Flex>
@@ -123,12 +128,14 @@ const DesktopNav = ({ itens }) => {
   const linkHoverColor = useColorModeValue("gray.800", "white");
   const popoverContentBgColor = useColorModeValue("white", "gray.800");
 
+  console.log("los itens", itens);
+
   return (
     <Stack direction={"row"} spacing={4}>
       {itens && itens.filter((e) => {
-        return e.label !== "Sismac";
+        return e.fieldGroupName !== "Sismac";
       }).map((navItem) => (
-        <Box key={navItem.label}>
+        <Box key={navItem.fieldGroupName}>
           <Popover trigger={"hover"} placement={"bottom-start"}>
             <PopoverTrigger>
               <Link
@@ -142,11 +149,11 @@ const DesktopNav = ({ itens }) => {
                   color: linkHoverColor,
                 }}
               >
-                {navItem.label}
+                {navItem.fieldGroupName}
               </Link>
             </PopoverTrigger>
 
-            {navItem.childItems.nodes && navItem.childItems.nodes.length >= 1 &&
+            {navItem.childs && navItem.childs.length >= 1 &&
               (
                 <PopoverContent
                   border={0}
@@ -157,8 +164,10 @@ const DesktopNav = ({ itens }) => {
                   minW={"sm"}
                 >
                   <Stack>
-                    {navItem.childItems.nodes.map((child) => {
-                      return <DesktopSubNav key={child.label} {...child} />;
+                    {navItem.childs.map((child) => {
+                      return (
+                        <DesktopSubNav key={child.fieldGroupName} {...child} />
+                      );
                     })}
                   </Stack>
                 </PopoverContent>
@@ -170,14 +179,14 @@ const DesktopNav = ({ itens }) => {
   );
 };
 
-const DesktopSubNav = ({ label, href, subLabel, childItems }) => {
+const DesktopSubNav = ({ fieldGroupName, links }) => {
   const popoverContentBgColor = useColorModeValue("white", "gray.800");
 
   return (
     <Popover trigger={"hover"} placement="right-start">
       <PopoverTrigger>
         <Link
-          href={href}
+          href={links[0].href}
           role={"group"}
           display={"block"}
           p={2}
@@ -191,9 +200,9 @@ const DesktopSubNav = ({ label, href, subLabel, childItems }) => {
                 _groupHover={{ color: "brand.verde-medium" }}
                 fontWeight={500}
               >
-                {label}
+                {fieldGroupName}
               </Text>
-              <Text fontSize={"sm"}>{subLabel}</Text>
+              {/*<Text fontSize={"sm"}>{subLabel}</Text>*/}
             </Box>
             <Flex
               transition={"all .3s ease"}
@@ -215,7 +224,8 @@ const DesktopSubNav = ({ label, href, subLabel, childItems }) => {
         </Link>
       </PopoverTrigger>
 
-      {childItems.nodes && childItems.nodes.length >= 1 &&
+      {
+        /*childItems.nodes && childItems.nodes.length >= 1 &&
         (
           <PopoverContent
             border={0}
@@ -231,7 +241,8 @@ const DesktopSubNav = ({ label, href, subLabel, childItems }) => {
               ))}
             </Stack>
           </PopoverContent>
-        )}
+        )*/
+      }
     </Popover>
   );
 };
@@ -345,6 +356,32 @@ const MobileNavItem = ({ label, children, href }) => {
   );
 };
 
+export const query = graphql`
+  fragment MenuPrincipalContent on MenuPrincipal {
+    id
+    content {
+      id
+      fieldGroupName
+      tag
+      links {
+        id
+        href
+        text
+      }
+      childs {
+        id
+        fieldGroupName
+        tag
+        links {
+          id
+          href
+          text
+        }
+      }    
+    }
+  }
+`;
+
 const NAV_ITEMS = [
   {
     label: "Productos",
@@ -385,3 +422,17 @@ const NAV_ITEMS = [
     href: "#",
   },
 ];
+
+/*
+
+tag
+links {
+  id
+  href
+  text
+}
+childs {
+  id
+}
+
+*/

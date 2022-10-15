@@ -31,6 +31,17 @@ module.exports = {
       resolve: "gatsby-source-wordpress",
       options: {
         url: process.env.WPGRAPHQL_URL,
+        /* auth: {
+          htaccess: {
+            username: `admin`,
+          },
+        },
+       debug: {
+          disableCompatibilityCheck: true,
+          graphql: {
+            writeQueriesToDisk: true,
+          },
+        }, */
       },
     },
     "gatsby-plugin-sharp",

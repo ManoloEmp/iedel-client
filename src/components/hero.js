@@ -10,6 +10,7 @@ import {
   Stack,
   Text,
 } from "@chakra-ui/react";
+
 import { Container } from "./ui";
 import { desktopHeaderNavWrapper } from "./header.css";
 import Slide from "./slide";
@@ -35,6 +36,7 @@ export default function Hero(props) {
   };
 
   const [currentSlide, setCurrentSlide] = React.useState(0);
+
   const slidesCount = props.content.length;
 
   const prevSlide = () => {
@@ -80,6 +82,7 @@ export default function Hero(props) {
             <Slide
               key={slide.id}
               {...slide}
+              onOpen={props.onOpen}
             />
           ))}
         </Flex>
