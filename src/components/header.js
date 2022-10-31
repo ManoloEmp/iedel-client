@@ -29,18 +29,26 @@ import {
 import BrandLogo from "./brand-logo";
 
 export default function Header(props) {
-  console.log("menuuu", props);
+  console.log(
+    "menuuu",
+    props.blocks.find((menu) => menu.fieldGroupName === "menuPrincipal")
+      .content,
+  );
+
   const { isOpen, onToggle } = useDisclosure();
 
   //const { navItems, cta } = data;
   const [elements, setElements] = React.useState(null);
 
   React.useEffect(() => {
-    const payload = props.blocks.find((node) =>
-      node.blocktype === "MenuPrincipal"
-    ).content.filter((e) => {
+    const payload = props.blocks.find((menu) =>
+      menu.fieldGroupName === "menuPrincipal"
+    )
+      .content;
+    /*Object.values(props.menu).filter((e) => {
       return e.tag === "menu_level_1";
-    });
+    }); */
+    console.log("payload", payload);
     setElements(payload);
   }, [props]);
 
@@ -130,63 +138,97 @@ const DesktopNav = ({ itens }) => {
 
   console.log("los itens", itens);
 
+  const fieldHandler = (field) => {
+    const word = field.indexOf("_") !== -1
+      ? `${field.split("_")[0]}
+      ${field.split("_")[1]}`
+      : field;
+    return word;
+  };
+
   return (
     <Stack direction={"row"} spacing={4}>
       {itens && itens.filter((e) => {
         return e.fieldGroupName !== "Sismac";
-      }).map((navItem) => (
-        <Box key={navItem.fieldGroupName}>
-          <Popover trigger={"hover"} placement={"bottom-start"}>
-            <PopoverTrigger>
-              <Link
-                p={2}
-                href={navItem.href ?? "#"}
-                fontSize={"sm"}
-                fontWeight={500}
-                color={linkColor}
-                _hover={{
-                  textDecoration: "none",
-                  color: linkHoverColor,
-                }}
-              >
-                {navItem.fieldGroupName}
-              </Link>
-            </PopoverTrigger>
+      }).map((navItem) => {
+        console.log(
+          "el iten",
+          navItem.fieldGroupName,
+          "index",
+          navItem.fieldGroupName.indexOf("_"),
+        );
 
-            {navItem.childs && navItem.childs.length >= 1 &&
-              (
-                <PopoverContent
-                  border={0}
-                  boxShadow={"xl"}
-                  bg={popoverContentBgColor}
-                  p={4}
-                  rounded={"xl"}
-                  minW={"sm"}
+        const childs = navItem.childs && Object.values(navItem.childs);
+        return (
+          <Box key={navItem.fieldGroupName}>
+            <Popover trigger={"hover"} placement={"bottom-start"}>
+              <PopoverTrigger>
+                <Link
+                  p={2}
+                  href={navItem.href ?? "#"}
+                  fontSize={"sm"}
+                  fontWeight={500}
+                  color={linkColor}
+                  _hover={{
+                    textDecoration: "none",
+                    color: linkHoverColor,
+                  }}
                 >
-                  <Stack>
-                    {navItem.childs.map((child) => {
-                      return (
-                        <DesktopSubNav key={child.fieldGroupName} {...child} />
-                      );
-                    })}
-                  </Stack>
-                </PopoverContent>
-              )}
-          </Popover>
-        </Box>
-      ))}
+                  {fieldHandler(navItem.fieldGroupName)}
+                </Link>
+              </PopoverTrigger>
+
+              {childs?.length >= 1 &&
+                (
+                  <PopoverContent
+                    border={0}
+                    boxShadow={"xl"}
+                    bg={popoverContentBgColor}
+                    p={4}
+                    rounded={"xl"}
+                    minW={"sm"}
+                  >
+                    <Stack>
+                      {childs.map((child) => {
+                        console.log("child", child);
+                        return (
+                          <DesktopSubNav
+                            key={child.fieldGroupName}
+                            {...child}
+                          />
+                        );
+                      })}
+                    </Stack>
+                  </PopoverContent>
+                )}
+            </Popover>
+          </Box>
+        );
+      })}
     </Stack>
   );
 };
 
-const DesktopSubNav = ({ fieldGroupName, links }) => {
+const DesktopSubNav = ({ fieldGroupName, links, childs }) => {
+  console.log("links", links, "field", fieldGroupName);
+  //links?[0].href
   const popoverContentBgColor = useColorModeValue("white", "gray.800");
+
+  const fieldHandler = (field) => {
+    const word = field.indexOf("_") !== -1
+      ? `${field.split("_")[0]}
+      ${field.split("_")[1]}`
+      : field;
+    return word;
+  };
+
+  const arrChilds = childs && Object.values(childs);
 
   return (
     <Popover trigger={"hover"} placement="right-start">
       <PopoverTrigger>
         <Link
-          href={links[0].href}
+          href={"#"}
           role={"group"}
           display={"block"}
           p={2}
@@ -200,7 +242,7 @@ const DesktopSubNav = ({ fieldGroupName, links }) => {
                 _groupHover={{ color: "brand.verde-medium" }}
                 fontWeight={500}
               >
-                {fieldGroupName}
+                {fieldHandler(fieldGroupName)}
               </Text>
               {/*<Text fontSize={"sm"}>{subLabel}</Text>*/}
             </Box>
@@ -224,8 +266,7 @@ const DesktopSubNav = ({ fieldGroupName, links }) => {
         </Link>
       </PopoverTrigger>
 
-      {
-        /*childItems.nodes && childItems.nodes.length >= 1 &&
+      {arrChilds?.length >= 1 &&
         (
           <PopoverContent
             border={0}
@@ -236,21 +277,21 @@ const DesktopSubNav = ({ fieldGroupName, links }) => {
             minW={"sm"}
           >
             <Stack>
-              {childItems.nodes.map((child) => (
-                <DesktopLevelNav key={child.label} {...child} />
+              {arrChilds.map((child) => (
+                <DesktopLevelNav key={child.fieldGroupName} {...child} />
               ))}
             </Stack>
           </PopoverContent>
-        )*/
-      }
+        )}
     </Popover>
   );
 };
 
-const DesktopLevelNav = ({ label, href, subLabel }) => {
+const DesktopLevelNav = (child) => {
+  console.log("childing", child.fieldGroupName);
   return (
     <Link
-      href={href}
+      href={"#"}
       role={"group"}
       display={"block"}
       p={2}
@@ -264,9 +305,9 @@ const DesktopLevelNav = ({ label, href, subLabel }) => {
             _groupHover={{ color: "brand.verde-medium" }}
             fontWeight={500}
           >
-            {label}
+            {child.fieldGroupName}
           </Text>
-          <Text fontSize={"sm"}>{subLabel}</Text>
+          <Text fontSize={"sm"}>{""}</Text>
         </Box>
         <Flex
           transition={"all .3s ease"}
@@ -359,8 +400,11 @@ const MobileNavItem = ({ label, children, href }) => {
 export const query = graphql`
   fragment MenuPrincipalContent on MenuPrincipal {
     id
+    blocktype
+    fieldGroupName
     content {
       id
+      blocktype
       fieldGroupName
       tag
       links {
@@ -370,14 +414,32 @@ export const query = graphql`
       }
       childs {
         id
+        blocktype
         fieldGroupName
+        childs {
+          id
+          blocktype
+          fieldGroupName
+          tag
+          image {
+            id
+            gatsbyImageData
+            alt
+            url
+          }
+          links {
+            id
+            href
+            text
+          }
+        }
         tag
         links {
           id
           href
           text
         }
-      }    
+      }
     }
   }
 `;

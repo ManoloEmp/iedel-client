@@ -1,5 +1,7 @@
 const { getGatsbyImageResolver } = require("gatsby-plugin-image/graphql-utils");
 
+const cuid = require("cuid");
+
 exports.createSchemaCustomization = async ({ actions }) => {
   actions.createFieldExtension({
     name: "wpImagePassthroughResolver",
@@ -156,11 +158,20 @@ exports.createSchemaCustomization = async ({ actions }) => {
   `);
 
   actions.createTypes(`
+    type MenuLevel3 implements Node & HomepageBlock {
+      id: ID!
+      blocktype: String
+      tag: String
+      image: HomepageImage @link
+      links: [HomepageLink] @link
+    }
+    
     type MenuLevel2 implements Node & HomepageBlock {
       id: ID!
       blocktype: String
       tag: String
       links: [HomepageLink] @link
+      childs: [MenuLevel3] @link
     }
     
     type MenuLevel1 implements Node & HomepageBlock {
@@ -189,43 +200,47 @@ exports.onCreateNode = ({
 }) => {
   if (!node.internal.type.includes("Wp")) return;
 
-  const createLinkNode = (parent) =>
-    ({ url, title, ...rest }, i) => {
-      const id = createNodeId(`${parent.id} >>> HomepageLink ${url} ${i}`);
-      actions.createNode({
-        id,
-        internal: {
-          type: "HomepageLink",
-          contentDigest: createContentDigest({ url, title }),
-        },
-        href: url,
-        text: title,
-      });
-      return id;
-    };
+  const createLinkNode = (parent) => ({ url, title, ...rest }, i) => {
+    const id = createNodeId(`${parent.id} >>> HomepageLink ${url} ${i}`);
+    actions.createNode({
+      id,
+      internal: {
+        type: "HomepageLink",
+        contentDigest: createContentDigest({ url, title }),
+      },
+      href: url,
+      text: title,
+    });
+    return id;
+  };
 
-  const createItemNode = (parent, type) =>
-    (data, i) => {
-      const id = createNodeId(`${parent.id} >>> ${type} ${i}`);
-      if (data.image) {
-        data.image = data.image?.id;
-      }
-      if (data.avatar) {
-        data.avatar = data.avatar?.id;
-      }
-      if (Array.isArray(data.link)) {
-        data.links = data.link.filter(Boolean).map(createLinkNode(parent));
-      }
-      actions.createNode({
-        ...data,
-        id,
-        internal: {
-          type,
-          contentDigest: createContentDigest(data),
-        },
-      });
-      return id;
-    };
+  const createItemNode = (parent, type) => (data, i) => {
+    const _id = cuid();
+    const id = createNodeId(`${_id} >>> ${type} ${i}`);
+    console.log("data data", JSON.stringify(data, null, 4));
+    if (data.image) {
+      data.image = data.image?.id;
+    }
+    if (data.avatar) {
+      data.avatar = data.avatar?.id;
+    }
+
+    console.log("is array", Array.isArray(data.target));
+    if (Array.isArray(data.link)) {
+      data.links = data.target.filter(Boolean).map(createLinkNode(parent));
+    }
+
+    console.log("itemm", data.childs, "type", type);
+    actions.createNode({
+      ...data,
+      id,
+      internal: {
+        type,
+        contentDigest: createContentDigest(data),
+      },
+    });
+    return id;
+  };
 
   if (node.internal.type === "WpPage") {
     switch (node.slug) {
@@ -240,38 +255,72 @@ exports.onCreateNode = ({
 
         const { menuPrincipal } = node;
 
-        console.log("data node", node);
+        console.log("node node", JSON.stringify(node, null, 4));
+
+        const childsHandler = (menu) => {
+          switch (menu.fieldGroupName) {
+            case "inicio":
+              return [];
+            case "nuestra_institucion":
+              console.log("menu aqui", menu.childs);
+              return [menu.childs.quienesSomos];
+
+            case "recursos":
+              return [menu.childs.academicos, menu.childs.aprendizaje];
+
+            case "academicos":
+              return [
+                menu.childs.evaluaciones,
+                menu.childs.educajunto,
+                menu.childs.bibliotecaCervantes,
+              ];
+
+            case "aprendizaje":
+              return [];
+
+            case "quienes_somos":
+              return [];
+
+            default:
+              return [...Object.values(menu.childs)];
+          }
+        };
 
         const content = {
-          menus: [menuPrincipal.inicio, menuPrincipal.nuestraInstitucion]
+          menus: [
+            menuPrincipal.inicio,
+            menuPrincipal.nuestraInstitucion,
+            menuPrincipal.recursos,
+          ]
             .filter(Boolean)
-            .map((menu) => {
-              const data = JSON.stringify(menu);
-              console.log("la data", data);
-              return ({
-                ...menu,
-                blocktype: "Menu",
-                links: [menu.target]
-                  .filter(Boolean)
-                  .map(createLinkNode(node.id)),
-                childs: [menu.childs?.quienesSomos]
-                  .filter(Boolean)
-                  .map((child) => ({
-                    ...child,
-                    internal: {
-                      type: "Menu",
-                      contentDigest: createContentDigest(JSON.stringify(child)), //createContentDigest(JSON.stringify(menuPrincipal)),
-                    },
-                    parent: menu.id,
-                    blocktype: "Menu",
-                    links: [child.target]
-                      .filter(Boolean)
-                      .map(createLinkNode(node.id)),
-                  }))
-                  .map(createItemNode(node, "MenuLevel2")),
-              });
-            })
-            .map(createItemNode(node, "MenuLevel1")),
+            .map((menu) => ({
+              ...menu,
+              blocktype: "Menu",
+              tag: menu.tag,
+
+              childs: menu.childs && childsHandler(menu)
+                .filter(Boolean)
+                .map((child) => ({
+                  ...child,
+
+                  blocktype: "MenuChild",
+                  tag: child.tag,
+                  childs: childsHandler(child)
+                    .filter(Boolean)
+                    .map((children) => ({
+                      ...children,
+
+                      blocktype: "MenuChildren",
+                      tag: children.tag,
+                      links: [children.target]
+                        .filter(Boolean)
+                        .map(createLinkNode(node.id)),
+                    }))
+                    .map(createItemNode(child, "MenuLevel3")),
+                }))
+                .map(createItemNode(menu, "MenuLevel2")),
+            }))
+            .map(createItemNode(menuPrincipal, "MenuLevel1")),
           slides: [hero.slide1, hero.slide2, hero.slide3]
             .filter(Boolean)
             .map((slide) => ({
@@ -296,8 +345,6 @@ exports.onCreateNode = ({
             .map(createItemNode(node, "HomepageValue")),
         };
 
-        console.log("content", JSON.stringify(content));
-
         const blocks = {
           hero: {
             id: createNodeId(`${node.id} >>> HomepageHero`),
@@ -318,21 +365,26 @@ exports.onCreateNode = ({
             content: content.values,
           },
           menuPrincipal: {
+            id: createNodeId(`${node.id} >>> MenuPrincipal`),
             ...menuPrincipal,
             content: content.menus,
           },
         };
 
-        const menuID = createNodeId(`${node.id} >>> MenuPrincipal`);
+        content.values.map((e) =>
+          console.log(
+            "content",
+            JSON.stringify(e, null, 4),
+          )
+        );
 
         actions.createNode({
           ...blocks.menuPrincipal,
-          id: menuID,
+
           internal: {
             type: "MenuPrincipal",
-            contentDigest: node.internal.contentDigest, //createContentDigest(JSON.stringify(menuPrincipal)),
+            contentDigest: node.internal.contentDigest, //createContentDigest(JSON.stringify(menuPrincipal)), //node.internal.contentDigest,
           },
-          parent: node.id,
           blocktype: "MenuPrincipal",
           /*links: [menuPrincipal.inicio, menuPrincipal.nuestra_institucion]
             .filter(Boolean)
@@ -378,12 +430,14 @@ exports.onCreateNode = ({
           description,
           image: node.featuredImage?.node?.id,
           content: [
-            menuID,
+            blocks.menuPrincipal.id,
             blocks.hero.id,
             blocks.bannerInstitucional.id,
             blocks.bannerValores.id,
           ],
         });
+
+        console.log("node page", JSON.stringify(blocks, null, 4));
 
         break;
       default:

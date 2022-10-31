@@ -11,23 +11,36 @@ import {
   ModalOverlay,
 } from "@chakra-ui/react";
 
-export default function BannerRecursos({ onClose, isOpen }) {
+import ContentRecursos from "./content-recursos";
+
+export default function BannerRecursos(props) {
+  console.log("el content", props);
   return (
     <>
-      <Modal isOpen={isOpen} onClose={onClose}>
+      <Modal isOpen={props.isOpen} onClose={props.onClose}>
         <ModalOverlay />
         <ModalContent>
-          <ModalHeader>Modal Title</ModalHeader>
-          <ModalCloseButton />
+          <ModalHeader color={"brand.green-core"}>
+            Recursos Escolares
+          </ModalHeader>
+          <ModalCloseButton color={"brand.green-core"} />
           <ModalBody>
-            hola
+            <ContentRecursos recursos={props.menu} />
           </ModalBody>
 
           <ModalFooter>
-            <Button colorScheme="blue" mr={3} onClick={onClose}>
+            <Button
+              colorScheme={"green"}
+              bg={"brand.green-core"}
+              _hover={{ bg: "brand.verde-medium" }}
+              mr={3}
+              onClick={props.onClose}
+            >
               Close
             </Button>
-            <Button variant="ghost">Secondary Action</Button>
+            <Button variant="ghost" color={"brand.green-core"}>
+              Secondary Action
+            </Button>
           </ModalFooter>
         </ModalContent>
       </Modal>

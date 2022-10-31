@@ -90,9 +90,9 @@ export default function Slide(props) {
             size={"lg"}
             fontWeight={"normal"}
             px={6}
-            colorScheme={"red"}
+            colorScheme={"green"}
             bg={"brand.green-core"}
-            _hover={{ bg: "red.500" }}
+            _hover={{ bg: "brand.verde-medium" }}
             onClick={props.onOpen}
           >
             {props.ctatext1}

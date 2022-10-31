@@ -128,6 +128,11 @@ export const query = graphql`
       feature1
       feature2
       feature3
+      links {
+        id
+        href
+        text
+      }
       image {
         id
         gatsbyImageData

@@ -8,33 +8,104 @@ import { useDisclosure } from "@chakra-ui/react";
 
 export default function Homepage(props) {
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const { homepage, allWpMenu, institucional } = props.data;
+  const { homepage, allWpMenu, institucional, menuPrincipal } = props.data;
 
   console.log("data en page", props);
 
   return (
     <Layout
       {...homepage}
+      menu={menuPrincipal}
     >
-      {homepage.blocks.map((block) => {
+      {homepage.blocks.map((block, i, arr) => {
         const { id, blocktype, ...componentProps } = block;
         console.log("bloc", blocktype);
         const Component = sections[blocktype] || Fallback;
         return (
-          <>
-            {blocktype === "HomepageHero"
-              ? <Component key={id} {...componentProps} onOpen={onOpen} />
-              : <Component key={id} {...componentProps} />}
-          </>
+          <Component
+            key={id}
+            {...componentProps}
+            menu={blocktype === "HomepageHero"
+              ? arr.find((e) => e.blocktype === "MenuPrincipal")
+              : ""}
+            onOpen={onOpen}
+          />
         );
       })}
-      <BannerRecursos isOpen={isOpen} onClose={onClose} />
+      <BannerRecursos
+        isOpen={isOpen}
+        onClose={onClose}
+        menu={homepage.blocks.map((block, i, arr) => {
+          const { blocktype } = block;
+
+          return blocktype === "HomepageHero"
+            ? arr.find((e) => e.blocktype === "MenuPrincipal")
+            : "";
+        })}
+      />
     </Layout>
   );
 }
 
 export const query = graphql`
   {
+    menuPrincipal{
+      id
+      fieldGroupName
+      inicio {
+
+        fieldGroupName
+        tag
+      }
+
+      nuestraInstitucion {
+        fieldGroupName
+        tag
+        childs {
+
+          quienesSomos {
+            fieldGroupName
+            tag
+          }
+        }
+      }
+
+      recursos {
+        fieldGroupName
+        tag
+        childs {
+          academicos {
+            fieldGroupName
+            tag
+            childs {
+              evaluaciones {
+                fieldGroupName
+                tag
+              }
+              educajunto {
+                fieldGroupName
+                image {
+                  id
+
+      
+
+                }
+
+
+              }
+            }
+
+          }
+          aprendizaje {
+            fieldGroupName
+            tag
+
+          }
+
+        }
+      }
+
+    }
     homepage {
       id
       title
@@ -50,14 +121,14 @@ export const query = graphql`
         ...HomepageBannerInstitucionalContent
         ...HomepageBannerValoresContent
         ...MenuPrincipalContent
-    
+
 
       }
     }
 
 
 
-    
+
   }
 `;
 

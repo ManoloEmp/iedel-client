@@ -4760,6 +4760,11 @@
   "resolved" "https://registry.npmjs.org/csstype/-/csstype-3.1.0.tgz"
   "version" "3.1.0"
 
+"cuid@^2.1.8":
+  "integrity" "sha512-xiEMER6E7TlTPnDxrM4eRiC6TRgjNX9xzEZ5U/Se2YJKr7Mq4pJn/2XEHjl3STcSh96GmkHPcBXLES8M29wyyg=="
+  "resolved" "https://registry.npmjs.org/cuid/-/cuid-2.1.8.tgz"
+  "version" "2.1.8"
+
 "cycle@^1.0.3":
   "integrity" "sha1-IegLK+hYD5i0aPN5QwZisEbDStI=sha512-TVF6svNzeQCOpjCqsy0/CSy8VgObG3wXusJ73xW2GbG5rGx7lC8zxDSURicsXI2UsGdi2L0QNRCi745/wUDvsA== sha512-TVF6svNzeQCOpjCqsy0/CSy8VgObG3wXusJ73xW2GbG5rGx7lC8zxDSURicsXI2UsGdi2L0QNRCi745/wUDvsA=="
   "resolved" "https://registry.npmjs.org/cycle/-/cycle-1.0.3.tgz"
