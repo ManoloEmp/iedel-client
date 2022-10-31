@@ -48,7 +48,6 @@ const Feature = ({ text, icon, iconBg }) => {
 };
 
 export default function BannerInstitucional(props) {
-  console.log("los props", props);
   return (
     <Section>
       <Container>
@@ -139,10 +138,6 @@ export const query = graphql`
         alt
         url
       }
-
-
-
-
 
   }
 `;

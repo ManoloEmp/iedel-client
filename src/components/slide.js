@@ -48,7 +48,6 @@ import { desktopHeaderNavWrapper } from "./header.css";
 } */
 
 export default function Slide(props) {
-  console.log("slide", props);
   return (
     <Box
       boxSize="full"

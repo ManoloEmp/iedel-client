@@ -2,8 +2,6 @@ import * as React from "react";
 import { Box, Image, Link, SimpleGrid } from "@chakra-ui/react";
 
 export default function ContentRecursos(props) {
-  console.log("recursos", props.recursos);
-
   return (
     <SimpleGrid minChildWidth="120px" spacing="20px">
       {props.recursos[1].content.find((e) => e.fieldGroupName === "recursos")

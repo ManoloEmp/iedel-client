@@ -29,12 +29,6 @@ import {
 import BrandLogo from "./brand-logo";
 
 export default function Header(props) {
-  console.log(
-    "menuuu",
-    props.blocks.find((menu) => menu.fieldGroupName === "menuPrincipal")
-      .content,
-  );
-
   const { isOpen, onToggle } = useDisclosure();
 
   //const { navItems, cta } = data;
@@ -48,7 +42,7 @@ export default function Header(props) {
     /*Object.values(props.menu).filter((e) => {
       return e.tag === "menu_level_1";
     }); */
-    console.log("payload", payload);
+
     setElements(payload);
   }, [props]);
 
@@ -136,8 +130,6 @@ const DesktopNav = ({ itens }) => {
   const linkHoverColor = useColorModeValue("gray.800", "white");
   const popoverContentBgColor = useColorModeValue("white", "gray.800");
 
-  console.log("los itens", itens);
-
   const fieldHandler = (field) => {
     const word = field.indexOf("_") !== -1
       ? `${field.split("_")[0]}
@@ -151,13 +143,6 @@ const DesktopNav = ({ itens }) => {
       {itens && itens.filter((e) => {
         return e.fieldGroupName !== "Sismac";
       }).map((navItem) => {
-        console.log(
-          "el iten",
-          navItem.fieldGroupName,
-          "index",
-          navItem.fieldGroupName.indexOf("_"),
-        );
-
         const childs = navItem.childs && Object.values(navItem.childs);
         return (
           <Box key={navItem.fieldGroupName}>
@@ -190,7 +175,6 @@ const DesktopNav = ({ itens }) => {
                   >
                     <Stack>
                       {childs.map((child) => {
-                        console.log("child", child);
                         return (
                           <DesktopSubNav
                             key={child.fieldGroupName}
@@ -210,8 +194,6 @@ const DesktopNav = ({ itens }) => {
 };
 
 const DesktopSubNav = ({ fieldGroupName, links, childs }) => {
-  console.log("links", links, "field", fieldGroupName);
-  //links?[0].href
   const popoverContentBgColor = useColorModeValue("white", "gray.800");
 
   const fieldHandler = (field) => {
@@ -288,7 +270,6 @@ const DesktopSubNav = ({ fieldGroupName, links, childs }) => {
 };
 
 const DesktopLevelNav = (child) => {
-  console.log("childing", child.fieldGroupName);
   return (
     <Link
       href={"#"}

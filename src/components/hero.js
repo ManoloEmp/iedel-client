@@ -56,8 +56,6 @@ export default function Hero(props) {
     ml: `-${currentSlide * 100}%`,
   };
 
-  console.log("hero", props);
-
   return (
     <Flex
       w="full"

@@ -217,7 +217,7 @@ exports.onCreateNode = ({
   const createItemNode = (parent, type) => (data, i) => {
     const _id = cuid();
     const id = createNodeId(`${_id} >>> ${type} ${i}`);
-    console.log("data data", JSON.stringify(data, null, 4));
+
     if (data.image) {
       data.image = data.image?.id;
     }
@@ -225,12 +225,6 @@ exports.onCreateNode = ({
       data.avatar = data.avatar?.id;
     }
 
-    console.log("is array", Array.isArray(data.target));
-    if (Array.isArray(data.link)) {
-      data.links = data.target.filter(Boolean).map(createLinkNode(parent));
-    }
-
-    console.log("itemm", data.childs, "type", type);
     actions.createNode({
       ...data,
       id,
@@ -255,14 +249,11 @@ exports.onCreateNode = ({
 
         const { menuPrincipal } = node;
 
-        console.log("node node", JSON.stringify(node, null, 4));
-
         const childsHandler = (menu) => {
           switch (menu.fieldGroupName) {
             case "inicio":
               return [];
             case "nuestra_institucion":
-              console.log("menu aqui", menu.childs);
               return [menu.childs.quienesSomos];
 
             case "recursos":
@@ -371,13 +362,6 @@ exports.onCreateNode = ({
           },
         };
 
-        content.values.map((e) =>
-          console.log(
-            "content",
-            JSON.stringify(e, null, 4),
-          )
-        );
-
         actions.createNode({
           ...blocks.menuPrincipal,
 
@@ -436,8 +420,6 @@ exports.onCreateNode = ({
             blocks.bannerValores.id,
           ],
         });
-
-        console.log("node page", JSON.stringify(blocks, null, 4));
 
         break;
       default:

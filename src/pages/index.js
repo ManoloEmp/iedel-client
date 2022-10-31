@@ -10,8 +10,6 @@ export default function Homepage(props) {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const { homepage, allWpMenu, institucional, menuPrincipal } = props.data;
 
-  console.log("data en page", props);
-
   return (
     <Layout
       {...homepage}
@@ -19,7 +17,7 @@ export default function Homepage(props) {
     >
       {homepage.blocks.map((block, i, arr) => {
         const { id, blocktype, ...componentProps } = block;
-        console.log("bloc", blocktype);
+
         const Component = sections[blocktype] || Fallback;
         return (
           <Component
@@ -49,63 +47,7 @@ export default function Homepage(props) {
 
 export const query = graphql`
   {
-    menuPrincipal{
-      id
-      fieldGroupName
-      inicio {
-
-        fieldGroupName
-        tag
-      }
-
-      nuestraInstitucion {
-        fieldGroupName
-        tag
-        childs {
-
-          quienesSomos {
-            fieldGroupName
-            tag
-          }
-        }
-      }
-
-      recursos {
-        fieldGroupName
-        tag
-        childs {
-          academicos {
-            fieldGroupName
-            tag
-            childs {
-              evaluaciones {
-                fieldGroupName
-                tag
-              }
-              educajunto {
-                fieldGroupName
-                image {
-                  id
-
-      
-
-                }
-
-
-              }
-            }
-
-          }
-          aprendizaje {
-            fieldGroupName
-            tag
-
-          }
-
-        }
-      }
-
-    }
+    
     homepage {
       id
       title

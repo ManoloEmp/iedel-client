@@ -14,7 +14,6 @@ import {
 import ContentRecursos from "./content-recursos";
 
 export default function BannerRecursos(props) {
-  console.log("el content", props);
   return (
     <>
       <Modal isOpen={props.isOpen} onClose={props.onClose}>
