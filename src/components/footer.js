@@ -22,16 +22,6 @@ import {
 import BrandLogo from "./brand-logo";
 
 const socialMedia = {
-  /*TWITTER: {
-    url: "https://twitter.com",
-    name: "Twitter",
-    icon: <Twitter />,
-  },
-  INSTAGRAM: {
-    url: "https://instagram.com",
-    name: "Instagram",
-    icon: <Instagram />,
-  },*/
   FACEBOOK: {
     url: "https://www.facebook.com/instelena/",
     name: "Facebook",
@@ -42,16 +32,6 @@ const socialMedia = {
     name: "YouTube",
     icon: <Youtube />,
   },
-  /*  GITHUB: {
-    url: "https://github.com",
-    name: "GitHub",
-    icon: <GitHub />,
-  },
-  TWITCH: {
-    url: "https://twitch.tv",
-    name: "Twitch",
-    icon: <Twitch />,
-  }, */
 };
 
 const getSocialURL = ({ service, username }) => {
@@ -105,21 +85,6 @@ const data = {
   ],
   socialLinks: [
     {
-      id: 0,
-      service: "TWITTER",
-      username: "gatsbyjs",
-    },
-    {
-      id: 1,
-      service: "INSTAGRAM",
-      username: "gatsbyjs",
-    },
-    {
-      id: 2,
-      service: "GITHUB",
-      username: "gatsbyjs",
-    },
-    {
       id: 3,
       service: "FACEBOOK",
       username: "gatsbyjs",
@@ -127,11 +92,6 @@ const data = {
     {
       id: 4,
       service: "YOUTUBE",
-      username: "gatsbyjs",
-    },
-    {
-      id: 5,
-      service: "TWITCH",
       username: "gatsbyjs",
     },
   ],
