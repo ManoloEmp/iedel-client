@@ -95,7 +95,8 @@ const data = {
       username: "gatsbyjs",
     },
   ],
-  copyright: "© 2022 Gatsby Inc. All rights reserved",
+  copyright:
+    "© 2022 Institución Educativa de Leña. Todos los derechos reservados",
 };
 
 export default function Footer(props) {

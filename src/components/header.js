@@ -206,11 +206,15 @@ const DesktopSubNav = ({ fieldGroupName, links, childs }) => {
 
   const arrChilds = childs && Object.values(childs);
 
+  console.log("fieldGroupName", fieldGroupName);
+
   return (
     <Popover trigger={"hover"} placement="right-start">
       <PopoverTrigger>
         <Link
-          href={"#"}
+          href={`${
+            fieldGroupName === "quienes_somos" ? "/sobre-nosotros" : ""
+          }`}
           role={"group"}
           display={"block"}
           p={2}

@@ -48,7 +48,21 @@ exports.createSchemaCustomization = async ({ actions }) => {
       url: String
     }
 
+    interface AboutImage implements Node {
+      id: ID!
+      alt: String
+      gatsbyImageData: GatsbyImageData @wpImagePassthroughResolver
+      image: AboutImage
+      localFile: File
+      url: String
+    }
+
     interface HomepageBlock implements Node {
+      id: ID!
+      blocktype: String
+    }
+
+    interface AboutBlock implements Node {
       id: ID!
       blocktype: String
     }
@@ -129,8 +143,8 @@ exports.createSchemaCustomization = async ({ actions }) => {
       id: ID!
       title: String
       description: String
-      image: HomepageImage @link
-      content: [HomepageBlock] @link
+      image: AboutImage @link
+      content: [AboutBlock] @link
     }
 
     type Page implements Node {
@@ -188,6 +202,31 @@ exports.createSchemaCustomization = async ({ actions }) => {
       content: [MenuLevel1] @link
     }
   `);
+
+  actions.createTypes(`
+
+    type AboutHero implements Node & AboutBlock {
+      id: ID!
+      blocktype: String
+      heading: String    
+      image: AboutImage @link
+    }
+
+    type AboutMision implements Node & AboutBlock {
+      id: ID!
+      blocktype: String
+      heading: String    
+      text: String
+    }
+
+    type AboutVision implements Node & AboutBlock {
+      id: ID!
+      blocktype: String
+      heading: String    
+      text: String
+    }
+    
+  `);
 };
 
 exports.onCreateNode = ({
@@ -240,6 +279,8 @@ exports.onCreateNode = ({
     switch (node.slug) {
       case "homepage":
         // prettier-ignore
+
+        console.log("homepage data", node);
         const {
           description,
           hero,
@@ -429,6 +470,12 @@ exports.onCreateNode = ({
         });
 
         break;
+
+      /*  case "about":
+        console.log("about data", node.about);
+
+        break; */
+
       default:
         actions.createNode({
           ...node.page,
