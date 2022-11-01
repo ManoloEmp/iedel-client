@@ -264,10 +264,17 @@ exports.onCreateNode = ({
                 menu.childs.evaluaciones,
                 menu.childs.educajunto,
                 menu.childs.bibliotecaCervantes,
+                menu.childs.ilce,
+                menu.childs.mundial,
               ];
 
             case "aprendizaje":
-              return [];
+              return [
+                menu.childs.colombiaAprende,
+                menu.childs.eduteka,
+                menu.childs.didactalia,
+                menu.childs.mundoPrimaria,
+              ];
 
             case "quienes_somos":
               return [];
