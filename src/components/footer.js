@@ -7,6 +7,7 @@ import {
   Twitter,
   Youtube,
 } from "react-feather";
+
 import {
   Box,
   Container,
@@ -21,7 +22,7 @@ import {
 import BrandLogo from "./brand-logo";
 
 const socialMedia = {
-  TWITTER: {
+  /*TWITTER: {
     url: "https://twitter.com",
     name: "Twitter",
     icon: <Twitter />,
@@ -30,18 +31,18 @@ const socialMedia = {
     url: "https://instagram.com",
     name: "Instagram",
     icon: <Instagram />,
-  },
+  },*/
   FACEBOOK: {
-    url: "https://facebook.com",
+    url: "https://www.facebook.com/instelena/",
     name: "Facebook",
     icon: <Facebook />,
   },
   YOUTUBE: {
-    url: "https://youtube.com",
+    url: "https://www.youtube.com/channel/UC9fJ9ffxqJmxMtYp-PGbQRg",
     name: "YouTube",
     icon: <Youtube />,
   },
-  GITHUB: {
+  /*  GITHUB: {
     url: "https://github.com",
     name: "GitHub",
     icon: <GitHub />,
@@ -50,7 +51,7 @@ const socialMedia = {
     url: "https://twitch.tv",
     name: "Twitch",
     icon: <Twitch />,
-  },
+  }, */
 };
 
 const getSocialURL = ({ service, username }) => {
@@ -72,22 +73,22 @@ const data = {
     {
       id: 0,
       href: "#!",
-      text: "Products",
+      text: "Inicio",
     },
     {
       id: 1,
       href: "#!",
-      text: "Pricing",
+      text: "Sobre nosotros",
     },
     {
       id: 2,
       href: "#!",
-      text: "About",
+      text: "Recursos",
     },
     {
       id: 3,
       href: "#!",
-      text: "Blog",
+      text: "Contacto",
     },
   ],
   meta: [
