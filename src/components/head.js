@@ -1,7 +1,10 @@
-import * as React from "react"
-import { Helmet } from "react-helmet"
+import * as React from "react";
+import { Helmet } from "react-helmet";
+// { title, description, image, ...args }
 
-export default function Head({ title, description, image }) {
+export default function Head(props) {
+  console.log("args data", props);
+
   return (
     <Helmet
       htmlAttributes={{
@@ -9,20 +12,22 @@ export default function Head({ title, description, image }) {
       }}
     >
       <meta charSet="utf-8" />
-      <title>{title}</title>
-      {description && (
+      <title>{props.title}</title>
+      {props.description && (
         <meta
           name="description"
           property="og:description"
-          content={description}
+          content={props.description}
         />
       )}
-      <meta property="og:title" content={title} />
-      {image && <meta property="og:image" content={image.url} />}
+      <meta property="og:title" content={props.title} />
+      {props.image && <meta property="og:image" content={props.image.url} />}
       <meta name="twitter:card" content="summary" />
-      <meta name="twitter:title" content={title} />
-      {description && <meta name="twitter:description" content={description} />}
-      {image && <meta name="twitter:image" content={image.url} />}
+      <meta name="twitter:title" content={props.title} />
+      {props.description && (
+        <meta name="twitter:description" content={props.description} />
+      )}
+      {props.image && <meta name="twitter:image" content={props.image.url} />}
     </Helmet>
-  )
+  );
 }

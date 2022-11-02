@@ -72,7 +72,7 @@ export default function BannerRecursos(props) {
     setResources(load);
   };
 
-  const academicosHandler = () => {
+  const institucionalesHandler = () => {
     setColorSchema({
       academicos: {
         colorScheme: "green",
@@ -118,9 +118,9 @@ export default function BannerRecursos(props) {
               variant={colorSchema.academicos.variant}
               color={colorSchema.academicos.color}
               mr={3}
-              onClick={() => academicosHandler()}
+              onClick={() => institucionalesHandler()}
             >
-              Académicos
+              Institucionales
             </Button>
             <Button
               colorScheme={colorSchema.aprendizaje.colorSchema}
