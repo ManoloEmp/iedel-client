@@ -130,12 +130,29 @@ const DesktopNav = ({ itens }) => {
   const linkHoverColor = useColorModeValue("gray.800", "white");
   const popoverContentBgColor = useColorModeValue("white", "gray.800");
 
+  console.log("itens", itens);
+
   const fieldHandler = (field) => {
     const word = field.indexOf("_") !== -1
       ? `${field.split("_")[0]}
       ${field.split("_")[1]}`
       : field;
-    return word;
+    /*console.log(
+      "word",
+      word.replace(word.charAt(0), word.charAt(0).toUpperCase()),
+    ); */
+
+    /*console.log(
+      "word",
+      word.endsWith("on") ? word.replace(word.at(-2), "ó") : word,
+    ); */
+
+    let transWord = word.endsWith("on") ? word.replace(word.at(-2), "ó") : word;
+
+    return transWord.replace(
+      transWord.charAt(0),
+      transWord.charAt(0).toUpperCase(),
+    );
   };
 
   return (
@@ -151,7 +168,7 @@ const DesktopNav = ({ itens }) => {
                 <Link
                   p={2}
                   href={navItem.href ?? "/"}
-                  fontSize={"sm"}
+                  fontSize={"md"}
                   fontWeight={500}
                   color={linkColor}
                   _hover={{
@@ -201,7 +218,23 @@ const DesktopSubNav = ({ fieldGroupName, links, childs }) => {
       ? `${field.split("_")[0]}
       ${field.split("_")[1]}`
       : field;
-    return word;
+    let transWord = (() => {
+      switch (word) {
+        case "academicos":
+          return word.replace(word.at(-6), "é");
+          break;
+        case word.includes("quienes") ? word : "_":
+          return word.replace(word.at(3), "é").concat(" ", "?");
+          break;
+        default:
+          return word;
+      }
+    })();
+
+    return transWord.replace(
+      transWord.charAt(0),
+      transWord.charAt(0).toUpperCase(),
+    );
   };
 
   const arrChilds = childs && Object.values(childs);
@@ -274,6 +307,29 @@ const DesktopSubNav = ({ fieldGroupName, links, childs }) => {
 };
 
 const DesktopLevelNav = (child) => {
+  const fieldHandler = (field) => {
+    const word = field.indexOf("_") !== -1
+      ? `${field.split("_")[0]}
+      ${field.split("_")[1]}`
+      : field;
+    /*console.log(
+      "word",
+      word.replace(word.charAt(0), word.charAt(0).toUpperCase()),
+    ); */
+
+    /*console.log(
+      "word",
+      word.endsWith("on") ? word.replace(word.at(-2), "ó") : word,
+    ); */
+
+    let transWord = word.endsWith("on") ? word.replace(word.at(-2), "ó") : word;
+
+    return transWord.replace(
+      transWord.charAt(0),
+      transWord.charAt(0).toUpperCase(),
+    );
+  };
+
   return (
     <Link
       href={"#"}
@@ -290,7 +346,7 @@ const DesktopLevelNav = (child) => {
             _groupHover={{ color: "brand.verde-medium" }}
             fontWeight={500}
           >
-            {child.fieldGroupName}
+            {fieldHandler(child.fieldGroupName)}
           </Text>
           <Text fontSize={"sm"}>{""}</Text>
         </Box>

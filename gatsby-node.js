@@ -291,6 +291,7 @@ exports.onCreateNode = ({
         const { menuPrincipal } = node;
 
         const childsHandler = (menu) => {
+          console.log("data en node", menu.fieldGroupName);
           switch (menu.fieldGroupName) {
             case "inicio":
               return [];
