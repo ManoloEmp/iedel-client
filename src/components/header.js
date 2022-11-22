@@ -99,7 +99,8 @@ export default function Header(props) {
             >
               Contacto
             </Button>
-            <Button
+            {
+              /*<Button
               display={{ base: "none", md: "inline-flex" }}
               fontSize={"sm"}
               fontWeight={600}
@@ -113,7 +114,8 @@ export default function Header(props) {
             >
               {elements &&
                 elements[elements.length - 1].fieldGroupName.toUpperCase()}
-            </Button>
+            </Button>*/
+            }
           </Stack>
         </Flex>
 

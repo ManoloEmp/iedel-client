@@ -376,6 +376,7 @@ exports.onCreateNode = ({
             bannerValores.value5,
             bannerValores.value6,
             bannerValores.value7,
+            bannerValores.value8,
           ]
             .filter(Boolean)
             .map((value) => ({
