@@ -245,7 +245,7 @@ const DesktopSubNav = ({ fieldGroupName, links, childs }) => {
 
   const arrChilds = childs && Object.values(childs);
 
-  console.log("fieldGroupName", fieldGroupName);
+  console.log("links", links, "childs", childs, "chi", arrChilds);
 
   return (
     <Popover trigger={"hover"} placement="right-start">
@@ -313,6 +313,7 @@ const DesktopSubNav = ({ fieldGroupName, links, childs }) => {
 };
 
 const DesktopLevelNav = (child) => {
+  console.log("levell", child);
   const fieldHandler = (field) => {
     const word = field.indexOf("_") !== -1
       ? `${field.split("_")[0]}
@@ -338,7 +339,7 @@ const DesktopLevelNav = (child) => {
 
   return (
     <Link
-      href={"#"}
+      href={child.links[0].href}
       role={"group"}
       display={"block"}
       p={2}
