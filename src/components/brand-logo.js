@@ -1,10 +1,10 @@
 import * as React from "react";
 import { Box, Image } from "@chakra-ui/react";
-import logo from "../Logo-Institucion-de-lena.png";
+import logo from "../Copia de Escudo IEDEL.png";
 
 export default function GatsbyWordpressLogo() {
   return (
-    <Box boxSize="120px" overflow="visible" zIndex={1}>
+    <Box boxSize="100px" overflow="visible" zIndex={1}>
       <Image
         objectFit="contain"
         src={logo}

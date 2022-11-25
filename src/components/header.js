@@ -53,7 +53,8 @@ export default function Header(props) {
           bg={useColorModeValue("white", "gray.800")}
           color={useColorModeValue("gray.600", "white")}
           minH={"60px"}
-          pt={{ base: "8px" }}
+          h={"150px"}
+          pt={{ base: "0px" }}
           px={{ base: 0 }}
           borderBottom={1}
           borderStyle={"solid"}

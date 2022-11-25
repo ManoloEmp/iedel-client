@@ -5,21 +5,42 @@ import Layout from "../components/layout";
 import Fallback from "../components/fallback";
 
 import { useDisclosure } from "@chakra-ui/react";
-import InstitucionalHero from "../components/institucional-hero";
+import AboutHero from "../components/about-hero";
+import Mision from "../components/mision";
+import Vision from "../components/vision";
 
 export default function SobreNosotros(props) {
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const { homepage, allWpMenu, institucional, menuPrincipal } = props.data;
+  const { homepage, allWpMenu, institucional, menuPrincipal, aboutPage } =
+    props.data;
+
+  console.log("about", props.data);
 
   return (
-    <Layout {...homepage}>
-      <InstitucionalHero />
+    <Layout {...homepage} menu={menuPrincipal}>
+      <AboutHero {...aboutPage} />
+      <Mision {...aboutPage} />
+      <Vision {...aboutPage} />
     </Layout>
   );
 }
 
 export const query = graphql`
   {
+    aboutPage {
+      id
+      title
+      description
+      
+      blocks: content {
+        id
+        blocktype
+        ...AboutHeroContent
+        ...AboutMisionContent
+        ...AboutVisionContent
+
+      }
+    }
     
     homepage {
       id

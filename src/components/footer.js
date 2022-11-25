@@ -23,7 +23,7 @@ import BrandLogo from "./brand-logo";
 
 const socialMedia = {
   FACEBOOK: {
-    url: "https://www.facebook.com/instelena/",
+    url: "https://www.facebook.com/instelena",
     name: "Facebook",
     icon: <Facebook />,
   },
@@ -87,12 +87,12 @@ const data = {
     {
       id: 3,
       service: "FACEBOOK",
-      username: "gatsbyjs",
+      username: "",
     },
     {
       id: 4,
       service: "YOUTUBE",
-      username: "gatsbyjs",
+      username: "",
     },
   ],
   copyright:

@@ -143,7 +143,6 @@ exports.createSchemaCustomization = async ({ actions }) => {
       id: ID!
       title: String
       description: String
-      image: AboutImage @link
       content: [AboutBlock] @link
     }
 
@@ -277,6 +276,15 @@ exports.onCreateNode = ({
 
   if (node.internal.type === "WpPage") {
     switch (node.slug) {
+      /*case "about":
+        console.log("about data", node);
+        const {
+          aboutHero,
+          mision,
+          vision,
+          bannerValores,
+        } = node.about; */
+
       case "homepage":
         // prettier-ignore
 
@@ -303,11 +311,8 @@ exports.onCreateNode = ({
 
             case "academicos":
               return [
-                menu.childs.evaluaciones,
+                menu.childs.sismac,
                 menu.childs.educajunto,
-                menu.childs.bibliotecaCervantes,
-                menu.childs.ilce,
-                menu.childs.mundial,
               ];
 
             case "aprendizaje":
@@ -385,6 +390,8 @@ exports.onCreateNode = ({
             }))
             .map(createItemNode(node, "HomepageValue")),
         };
+
+        console.log("image banner", bannerInstitucional.image);
 
         const blocks = {
           hero: {
@@ -471,12 +478,160 @@ exports.onCreateNode = ({
           ],
         });
 
+        /*const {
+          aboutHero,
+          mision,
+          vision,
+        } = node.about;
+
+        const blocksAbout = {
+          aboutHero: {
+            id: createNodeId(`${node.id} >>> AboutHero`),
+            ...aboutHero,
+
+            heading: aboutHero.heading,
+            image: aboutHero.image?.id,
+          },
+          mision: {
+            id: createNodeId(`${node.id} >>> AboutMision`),
+            ...mision,
+            heading: mision.heading,
+            text: mision.text,
+          },
+          vision: {
+            id: createNodeId(`${node.id} >>> AboutVision`),
+            ...vision,
+            heading: vision.heading,
+            text: vision.text,
+          },
+        };
+
+        actions.createNode({
+          ...blocksAbout.aboutHero,
+          blocktype: "AboutHero",
+          internal: {
+            type: "AboutHero",
+            contentDigest: createContentDigest(JSON.stringify(aboutHero)),
+          },
+        });
+
+        actions.createNode({
+          ...blocksAbout.mision,
+          blocktype: "AboutMision",
+          internal: {
+            type: "AboutMision",
+            contentDigest: createContentDigest(JSON.stringify(mision)),
+          },
+        });
+
+        actions.createNode({
+          ...blocksAbout.vision,
+          blocktype: "AboutVision",
+          internal: {
+            type: "AboutVision",
+            contentDigest: createContentDigest(JSON.stringify(vision)),
+          },
+        });
+
+        actions.createNode({
+          ...node.about,
+          id: createNodeId(`${node.id} >>> AboutPage`),
+          internal: {
+            type: "AboutPage",
+            contentDigest: node.internal.contentDigest,
+          },
+          parent: node.id,
+          title: node.title,
+          description,
+          image: node.featuredImage?.node?.id,
+          content: [
+            blocksAbout.aboutHero.id,
+            blocksAbout.mision.id,
+            blocksAbout.vision.id,
+          ],
+        }); */
+
         break;
 
-      /*  case "about":
+      case "about":
         console.log("about data", node.about);
 
-        break; */
+        const {
+          description: aboutDescription,
+          aboutHero,
+          mision,
+          vision,
+        } = node.about;
+
+        console.log("image", aboutHero.image);
+
+        const blocksAbout = {
+          aboutHero: {
+            id: createNodeId(`${node.id} >>> AboutHero`),
+            ...aboutHero,
+
+            heading: aboutHero.heading,
+            image: aboutHero.image?.id,
+          },
+          mision: {
+            id: createNodeId(`${node.id} >>> AboutMision`),
+            ...mision,
+            heading: mision.heading,
+            text: mision.text,
+          },
+          vision: {
+            id: createNodeId(`${node.id} >>> AboutVision`),
+            ...vision,
+            heading: vision.heading,
+            text: vision.text,
+          },
+        };
+
+        actions.createNode({
+          ...blocksAbout.aboutHero,
+          blocktype: "AboutHero",
+          internal: {
+            type: "AboutHero",
+            contentDigest: createContentDigest(JSON.stringify(aboutHero)),
+          },
+        });
+
+        actions.createNode({
+          ...blocksAbout.mision,
+          blocktype: "AboutMision",
+          internal: {
+            type: "AboutMision",
+            contentDigest: createContentDigest(JSON.stringify(mision)),
+          },
+        });
+
+        actions.createNode({
+          ...blocksAbout.vision,
+          blocktype: "AboutVision",
+          internal: {
+            type: "AboutVision",
+            contentDigest: createContentDigest(JSON.stringify(vision)),
+          },
+        });
+
+        actions.createNode({
+          ...node.about,
+          id: createNodeId(`${node.id} >>> AboutPage`),
+          internal: {
+            type: "AboutPage",
+            contentDigest: node.internal.contentDigest,
+          },
+          parent: node.id,
+          title: node.title,
+          aboutDescription,
+          content: [
+            blocksAbout.aboutHero.id,
+            blocksAbout.mision.id,
+            blocksAbout.vision.id,
+          ],
+        });
+
+        break;
 
       default:
         actions.createNode({

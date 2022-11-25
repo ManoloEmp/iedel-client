@@ -1,14 +1,14 @@
-import { style, styleVariants } from "@vanilla-extract/css"
-import { calc } from "@vanilla-extract/css-utils"
-import { theme } from "../theme.css"
+import { style, styleVariants } from "@vanilla-extract/css";
+import { calc } from "@vanilla-extract/css-utils";
+import { theme } from "../theme.css";
 
-const breakpoints = ["40em", "52em", "64em"]
+const breakpoints = ["40em", "52em", "64em"];
 
 export const media = {
   small: `screen and (min-width: ${breakpoints[0]})`,
   medium: `screen and (min-width: ${breakpoints[1]})`,
   large: `screen and (min-width: ${breakpoints[2]})`,
-}
+};
 
 export const container = style({
   maxWidth: theme.sizes.container,
@@ -16,9 +16,9 @@ export const container = style({
   marginRight: "auto",
   paddingLeft: theme.space[4],
   paddingRight: theme.space[4],
-})
+});
 
-export type Containers = "normal" | "wide" | "narrow" | "tight" | "fullbleed"
+export type Containers = "normal" | "wide" | "narrow" | "tight" | "fullbleed";
 
 export const containers: Record<Containers, string> = styleVariants({
   normal: [container],
@@ -59,12 +59,12 @@ export const containers: Record<Containers, string> = styleVariants({
       },
     },
   ],
-})
+});
 
 export const flex = style({
   display: "flex",
   alignItems: "center",
-})
+});
 
 export type FlexVariants =
   | "wrap"
@@ -76,7 +76,7 @@ export type FlexVariants =
   | "stretch"
   | "spaceBetween"
   | "center"
-  | "responsive"
+  | "responsive";
 
 export const flexVariants: Record<FlexVariants, string> = styleVariants({
   wrap: {
@@ -119,9 +119,9 @@ export const flexVariants: Record<FlexVariants, string> = styleVariants({
       },
     },
   },
-})
+});
 
-export const flexGap = styleVariants(theme.space, (gap) => ({ gap }))
+export const flexGap = styleVariants(theme.space, (gap) => ({ gap }));
 
 export type Widths =
   | "full"
@@ -129,7 +129,7 @@ export type Widths =
   | "quarter"
   | "third"
   | "twothirds"
-  | "fitContent"
+  | "fitContent";
 
 export const widths: Record<Widths, string> = styleVariants(
   {
@@ -149,41 +149,41 @@ export const widths: Record<Widths, string> = styleVariants(
         },
       },
     },
-  ]
-)
+  ],
+);
 
 export const list = style({
   listStyle: "none",
   padding: 0,
   margin: 0,
-})
+});
 
-export const padding = styleVariants(theme.space, (padding) => ({ padding }))
+export const padding = styleVariants(theme.space, (padding) => ({ padding }));
 export const paddingY = styleVariants(theme.space, (padding) => ({
   paddingTop: padding,
   paddingBottom: padding,
-}))
+}));
 export const marginY = styleVariants(theme.space, (margin) => ({
   marginTop: margin,
   marginBottom: margin,
-}))
+}));
 
 export const gutter = styleVariants(theme.space, (val: string) => ({
   marginLeft: calc.multiply(val, -1),
   marginRight: calc.multiply(val, -1),
-}))
+}));
 
 export const radii = styleVariants(theme.radii, (borderRadius) => ({
   overflow: "hidden",
   borderRadius,
-}))
+}));
 export const order = styleVariants({ 0: 0, 1: 1, 2: 2, 3: 3 }, (order) => ({
   "@media": {
     [media.small]: {
       order,
     },
   },
-}))
+}));
 export const box = styleVariants({
   center: {
     display: "flex",
@@ -191,7 +191,7 @@ export const box = styleVariants({
     alignItems: "center",
     textAlign: "center",
   },
-})
+});
 
 export const section = style({
   paddingTop: theme.space[4],
@@ -202,49 +202,49 @@ export const section = style({
       paddingBottom: theme.space[5],
     },
   },
-})
+});
 
 export const margin = styleVariants(
   {
     ...theme.space,
     auto: "auto",
   },
-  (margin) => ({ margin })
-)
+  (margin) => ({ margin }),
+);
 
 export const marginLeft = styleVariants(
   {
     ...theme.space,
     auto: "auto",
   },
-  (marginLeft) => ({ marginLeft })
-)
+  (marginLeft) => ({ marginLeft }),
+);
 
 export const marginRight = styleVariants(
   {
     ...theme.space,
     auto: "auto",
   },
-  (marginRight) => ({ marginRight })
-)
+  (marginRight) => ({ marginRight }),
+);
 
 export const marginTop = styleVariants(
   {
     ...theme.space,
     auto: "auto",
   },
-  (marginTop) => ({ marginTop })
-)
+  (marginTop) => ({ marginTop }),
+);
 
 export const marginBottom = styleVariants(
   {
     ...theme.space,
     auto: "auto",
   },
-  (marginBottom) => ({ marginBottom })
-)
+  (marginBottom) => ({ marginBottom }),
+);
 
-export const margin0 = style({ margin: 0 })
+export const margin0 = style({ margin: 0 });
 
 export type TextVariants =
   | "body"
@@ -261,7 +261,7 @@ export type TextVariants =
   | "medium"
   | "mega"
   | "center"
-  | "bold"
+  | "bold";
 
 export const text: Record<TextVariants, string> = styleVariants({
   body: [
@@ -410,14 +410,14 @@ export const text: Record<TextVariants, string> = styleVariants({
   bold: {
     fontWeight: theme.fontWeights.bold,
   },
-})
+});
 
 export const link = style({
   color: "inherit",
   ":hover": {
     color: theme.colors.active,
   },
-})
+});
 
 export const navlink = style({
   color: "inherit",
@@ -428,7 +428,7 @@ export const navlink = style({
   ":hover": {
     color: theme.colors.active,
   },
-})
+});
 
 export const navButtonlink = style({
   color: "inherit",
@@ -445,7 +445,7 @@ export const navButtonlink = style({
     color: theme.colors.active,
     cursor: "pointer",
   },
-})
+});
 
 export const ctaLink = style({
   color: "inherit",
@@ -453,13 +453,13 @@ export const ctaLink = style({
   ":hover": {
     color: theme.colors.active,
   },
-})
+});
 
 export const blockLink = style({
   display: "block",
   color: "inherit",
   textDecoration: "none",
-})
+});
 
 const button = style({
   display: "inline-flex",
@@ -472,9 +472,9 @@ const button = style({
   paddingLeft: theme.space[3],
   paddingRight: theme.space[3],
   borderRadius: theme.radii.button,
-})
+});
 
-export type ButtonVariants = "primary" | "reversed" | "link" | "linkReversed"
+export type ButtonVariants = "primary" | "reversed" | "link" | "linkReversed";
 
 export const buttons: Record<ButtonVariants, string> = styleVariants({
   primary: [
@@ -533,9 +533,9 @@ export const buttons: Record<ButtonVariants, string> = styleVariants({
       },
     },
   ],
-})
+});
 
-export type Backgrounds = "primary" | "muted"
+export type Backgrounds = "primary" | "muted";
 
 export const backgrounds: Record<Backgrounds, string> = styleVariants({
   primary: {
@@ -546,7 +546,7 @@ export const backgrounds: Record<Backgrounds, string> = styleVariants({
     color: theme.colors.primary,
     backgroundColor: theme.colors.muted,
   },
-})
+});
 
 export const blockquote = style({
   margin: 0,
@@ -554,7 +554,7 @@ export const blockquote = style({
   paddingRight: 0,
   paddingTop: 0,
   paddingBottom: theme.space[4],
-})
+});
 
 export const avatar = style({
   minWidth: 0,
@@ -562,9 +562,9 @@ export const avatar = style({
   width: theme.sizes.avatar,
   height: theme.sizes.avatar,
   borderRadius: theme.radii.circle,
-})
+});
 
-export type LogoSizes = "small" | "medium"
+export type LogoSizes = "small" | "medium";
 
 export const logos: Record<LogoSizes, string> = styleVariants({
   small: {
@@ -574,9 +574,9 @@ export const logos: Record<LogoSizes, string> = styleVariants({
   medium: {
     maxWidth: "128px",
   },
-})
+});
 
-export type IconSizes = "small" | "medium" | "large"
+export type IconSizes = "small" | "medium" | "large";
 
 export const icons: Record<IconSizes, string> = styleVariants(
   {
@@ -588,8 +588,8 @@ export const icons: Record<IconSizes, string> = styleVariants(
     width: size,
     height: size,
     marginBottom: theme.space[3],
-  })
-)
+  }),
+);
 
 export const iconLink = style({
   color: theme.colors.text,
@@ -600,7 +600,7 @@ export const iconLink = style({
   ":focus": {
     color: theme.colors.active,
   },
-})
+});
 
 export const interactiveIcon = style({
   display: "flex",
@@ -611,7 +611,7 @@ export const interactiveIcon = style({
   cursor: "pointer",
   width: 48,
   height: 48,
-})
+});
 
 export const visuallyHidden = style({
   border: 0,
@@ -622,9 +622,9 @@ export const visuallyHidden = style({
   position: "absolute",
   whiteSpace: "nowrap",
   width: "1px",
-})
+});
 
 // for debugging only
 export const debug = style({
   outline: "1px solid tomato",
-})
+});
