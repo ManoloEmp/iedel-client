@@ -2,6 +2,7 @@ import * as React from "react";
 import { Container } from "./ui";
 import { graphql } from "gatsby";
 import { desktopHeaderNavWrapper } from "./header.css";
+import { IconLink, NavLink } from "./ui";
 import {
   Box,
   Button,
@@ -90,15 +91,18 @@ export default function Header(props) {
             justify={"flex-end"}
             direction={"row"}
             spacing={6}
+            pt={{ base: "16px" }}
           >
             <Button
               as={"a"}
-              fontSize={"sm"}
-              fontWeight={400}
+              fontSize={"md"}
+              fontWeight={500}
               variant={"link"}
               href={"#"}
             >
-              Contacto
+              <NavLink to={"https://www.facebook.com/instelena/about"}>
+                <Text color={"brand.green-core"} variant="small">Contacto</Text>
+              </NavLink>
             </Button>
             {
               /*<Button
