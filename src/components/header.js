@@ -96,7 +96,7 @@ export default function Header(props) {
             <Button
               as={"a"}
               fontSize={"md"}
-              fontWeight={500}
+              fontWeight={600}
               variant={"link"}
               href={"#"}
             >
