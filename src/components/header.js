@@ -93,17 +93,16 @@ export default function Header(props) {
             spacing={6}
             pt={{ base: "16px" }}
           >
-            <Button
-              as={"a"}
-              fontSize={"md"}
-              fontWeight={600}
-              variant={"link"}
-              href={"#"}
-            >
-              <NavLink to={"https://www.facebook.com/instelena/about"}>
+            <NavLink to={"https://www.facebook.com/instelena/about"}>
+              <Button
+                as={"a"}
+                fontSize={"md"}
+                fontWeight={600}
+                variant={"link"}
+              >
                 <Text color={"brand.green-core"} variant="small">Contacto</Text>
-              </NavLink>
-            </Button>
+              </Button>
+            </NavLink>
             {
               /*<Button
               display={{ base: "none", md: "inline-flex" }}
